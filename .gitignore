@@ -9,3 +9,4 @@ cdktf.log
 stack_output.json
 secrets.env.template
 webchat_secrets.json
+/pc_donation/venv/*
