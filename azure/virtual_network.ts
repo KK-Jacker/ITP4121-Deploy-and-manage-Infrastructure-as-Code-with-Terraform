@@ -22,7 +22,7 @@ export class VirtualNetworkConstruct extends Construct {
             name: "default_network",
             resourceGroupName: resourceGroup.name,
             location: resourceGroup.location,
-            addressSpace: ['10.0.0.0/16'],
+            addressSpace: ['10.0.0.0/12'],
             tags: JSON.parse(process.env.AZURETAG!),
         });
 
@@ -30,20 +30,20 @@ export class VirtualNetworkConstruct extends Construct {
             name: "akssubnet1",
             resourceGroupName: resourceGroup.name,
             virtualNetworkName: this.aksvirtualNetwork.name,
-            addressPrefix: "10.0.1.0/16",
+            addressPrefix: "10.1.0.0/16",
         });
 
         this.akssubnet2 = new Subnet(this, "ITP4121-Project lib Subnet 2 for k8s", {
             name: "akssubnet2",
             resourceGroupName: resourceGroup.name,
             virtualNetworkName: this.aksvirtualNetwork.name,
-            addressPrefix: "10.0.2.0/16",
+            addressPrefix: "10.2.0.0/16",
         });
         this.appgwVirtualNetwork = new VirtualNetwork(this, "ITP4121-Project lib Virtual Network for appgw", {
             name: "appgw_network",
             resourceGroupName: resourceGroup.name,
             location: resourceGroup.location,
-            addressSpace: ['10.254.0.0/16'],
+            addressSpace: ['10.16.0.0/12'],
             tags: JSON.parse(process.env.AZURETAG!),
         });
 
@@ -51,21 +51,22 @@ export class VirtualNetworkConstruct extends Construct {
             name: "frontend_subnet",
             resourceGroupName: resourceGroup.name,
             virtualNetworkName: this.appgwVirtualNetwork.name,
-            addressPrefix: "10.254.1.0/24",
+            addressPrefix: "10.17.0.0/16",
         });
 
         this.backendSubnet = new Subnet(this, "ITP4121-Project lib Subnet 2 for appgw", {
             name: "backend_subnet",
             resourceGroupName: resourceGroup.name,
             virtualNetworkName: this.appgwVirtualNetwork.name,
-            addressPrefix: "10.254.2.0/24",
+            addressPrefix: "10.18.0.0/16",
         });
 
         this.publicIp = new PublicIp(this, "ITP4121-Project lib Public IP for appgw", {
             name: "appgw_public_ip",
             resourceGroupName: resourceGroup.name,
             location: resourceGroup.location,
-            allocationMethod: "Dynamic",
+            allocationMethod: "Static",
+            sku: "Standard",
         });
 
         const backend_address_pool_name = this.appgwVirtualNetwork.name + "-beap";
@@ -80,8 +81,8 @@ export class VirtualNetworkConstruct extends Construct {
             resourceGroupName: resourceGroup.name,
             location: resourceGroup.location,
             sku: [{
-                name: "Standard_small",
-                tier: "Standard",
+                name: "Standard_v2",
+                tier: "Standard_v2",
                 capacity: 2,
             }],
             gatewayIpConfiguration: [
@@ -134,18 +135,21 @@ export class VirtualNetworkConstruct extends Construct {
                     backendHttpSettingsName: http_setting_name,
                 },
             ],
+            dependsOn: [this.publicIp],
         });
         new VirtualNetworkPeering(this, "ITP4121-Project lib Virtual Network app gateway to aks Peering", {
             name: "appgw-aws-peer",
             resourceGroupName: resourceGroup.name,
-            virtualNetworkName: this.appgwVirtualNetwork.id,
+            virtualNetworkName: this.appgwVirtualNetwork.name,
             remoteVirtualNetworkId: this.aksvirtualNetwork.id,
+            dependsOn: [this.akssubnet1, this.akssubnet2,this.frontendSubnet, this.backendSubnet],
         });
         new VirtualNetworkPeering(this, "ITP4121-Project lib Virtual Network aks to app gatewayPeering", {
             name: "aws-appgw-peer",
             resourceGroupName: resourceGroup.name,
-            virtualNetworkName: this.aksvirtualNetwork.id,
+            virtualNetworkName: this.aksvirtualNetwork.name,
             remoteVirtualNetworkId: this.appgwVirtualNetwork.id,
+            dependsOn: [this.akssubnet1, this.akssubnet2,this.frontendSubnet, this.backendSubnet],
         });
     }
 }

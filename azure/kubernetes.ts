@@ -104,7 +104,7 @@ export class KubernetesClusterSConstruct extends Construct {
              export VAULT_URL=${vault_url} && export AZURE_CLIENT_ID=${azure_client_id} && export AZURE_CLIENT_SECRET=${azure_client_secret} && export AZURE_TENANT_ID=${azure_tenant_id} && \
              kubectl create secret generic web-secret --from-literal='IMAGE=${image}' --from-literal='DB_PORT=3306' --from-literal='DB_USER=${db_user}' --from-literal='DB_PASS=${db_pass}' --from-literal='DB_HOST=${db_host}' --from-literal='DB_NAME=${db_name}' && \
              kubectl create secret docker-registry azurecr-secret --namespace default --docker-server=${azurecr_loginserver} --docker-username=${azure_client_id} --docker-password=${azure_client_secret} --
-             envsubst < web-deployment.yaml | kubectl apply -f - && kubectl apply -f web-service.yaml,web-ingress.yaml,./deplmysql-deployment.yaml,mysql-service.yaml
+             envsubst < web-deployment.yaml | kubectl apply -f - && kubectl apply -f web-service.yaml,web-ingress.yaml,mysql-deployment.yaml,mysql-service.yaml
              `
         );
     }

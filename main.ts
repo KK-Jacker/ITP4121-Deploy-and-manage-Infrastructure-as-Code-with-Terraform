@@ -130,7 +130,7 @@ export class MainStack extends TerraformStack {
             "Container Registry Identity",
             {value: containerRegistrySConstruct.containerRegistry.identity, sensitive: true}
         );
-
+30306
         new TerraformOutput(
             this,
             "Public IP Address",
