@@ -26,7 +26,7 @@ class DatabaseConfig(object):
     db_user = os.environ["DB_USER"]
     db_pass = os.environ["DB_PASS"]
     db_host = os.environ["DB_HOST"]
-    db_port = 3306
+    db_port = os.environ["DB_PORT"]
     db_name = os.environ["DB_NAME"]
     web_port = 80
 
