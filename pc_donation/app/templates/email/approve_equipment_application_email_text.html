@@ -1,0 +1,14 @@
+{% extends "email/layouts/email_text.html" %}
+
+{% block content %}
+    Your equipment application has been approved by your teacher.
+    Please open this link {{ data.url }} to login.
+{% endblock %}
+
+{% block content_zh %}
+    您的設備申請已被您的老師批准。
+    登錄請打開此鏈接 {{ data.url }}
+{% endblock %}
+{% block footer %}
+
+{% endblock %}

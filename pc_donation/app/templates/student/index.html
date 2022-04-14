@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block current_app_styles %}
+
+{% endblock %}
+{% block current_app_content %}
+
+    {% if lang == 'zh_Hant' %}
+    {% 
+        set categorys = [
+            {
+                "link_name": url_for(RouteConstants.StudentView.STORY),
+                "name": "申請物品",
+                "body": "申請所需的物品",
+                "act": "立即申請"
+            },
+            {
+                "link_name": url_for(RouteConstants.HasStoryStudentView.CREATE_EQUIPMENT_APPLICATION),
+                "name": "New Equipment Application",
+                "body": "Tell us what you need and let someone donate it to you.",
+                "act": "Apply"
+            },
+            {
+                "link_name": url_for(RouteConstants.HasStoryStudentView.NEW_REPAIR_APPLICATION),
+                "name": "申請維修",
+                "body": "為您的物品申請維修",
+                "act": "立即修理"
+            },
+            {
+                "link_name": url_for(RouteConstants.HasStoryStudentView.EQUIPMENT_APPLICATION_HISTORY),
+                "name": "申請物品記錄",
+                "body": "查看你的申請記錄",
+                "act": "立即查看"
+            },
+            {
+                "link_name": url_for(RouteConstants.HasStoryStudentView.REPAIR_APPLICATION_LIST),
+                "name": "維修記錄",
+                "body": "查看你的維修記錄",
+                "act": "立即查看"
+            }
+        ] 
+    %}
+    {% else %}
+    {%
+        set categorys = [
+            {
+                "link_name": url_for(RouteConstants.StudentView.STORY),
+                "name": "Share your story",
+                "body": "Tell donor and volunteer your real situation for priority.",
+                "act": "Enter"
+            },
+            {
+                "link_name": url_for(RouteConstants.HasStoryStudentView.CREATE_EQUIPMENT_APPLICATION),
+                "name": "New Equipment Application",
+                "body": "Tell us what you need and let someone donate it to you.",
+                "act": "Apply"
+            },
+            {
+                "link_name": url_for(RouteConstants.HasStoryStudentView.NEW_REPAIR_APPLICATION),
+                "name": "New Repair Request",
+                "body": "Looks for volunteer to fix your computer or equipment",
+                "act": "Apply Now"
+            },
+            {
+                "link_name": url_for(RouteConstants.HasStoryStudentView.EQUIPMENT_APPLICATION_HISTORY),
+                "name": "Equipment Application Record",
+                "body": "Check your Equipment Application status and communicate with the donor.",
+                "act": "View"
+            },
+            {
+                "link_name": url_for(RouteConstants.HasStoryStudentView.REPAIR_APPLICATION_LIST),
+                "name": "Repair Record",
+                "body": "Check your Repair Request status and communicate with the volunteer.",
+                "act": "View"
+            }
+        ] 
+    %}
+    {% endif %}
+
+
+    <div class="container">
+        <div class="category-card card-deck mb-3">
+            <div class="row">
+                {% for category in categorys %}
+                    <div class="col-md-6 col-lg-4 col-sm-12 d-inline-flex">
+                        <div class="card my-4 shadow-sm ">
+                            <div class="card-header">
+                                <h4 class="my-0 font-weight-normal">{{ category.name }}</h4>
+                            </div>
+                            <div class="card-body">
+                                <u1 class="mt-3 mb-4 h-4">{{ category.body }}</u1>
+                            </div>
+                            <div class="card-body">
+                                <button type="button" onclick="location.href='{{ category.link_name }}' "
+                                        class="btn btn-lg btn-block btn-outline-primary">{{ category.act }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <iframe src="https://webchat.botframework.com/embed/ishare-Web-bot?s={{ key }}"
+            style="min-width: 400px; width: 100%; min-height: 500px;"></iframe>
+{% endblock %}

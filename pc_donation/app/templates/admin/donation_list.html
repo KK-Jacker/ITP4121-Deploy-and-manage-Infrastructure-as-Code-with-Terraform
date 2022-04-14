@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block current_app_styles %}
+    <style>
+        div.scrollmenu {
+            overflow: auto;
+            white-space: nowrap;
+        }
+    </style>
+{% endblock %}
+
+{% block current_app_content %}
+
+    <div class="row scrollmenu">
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">{{ _("Action") }}</th>
+                <th scope="col">{{ _("Equipment Type") }}</th>
+                <th scope="col">{{ _("Donor") }}</th>
+                <th scope="col">{{ _("Email") }}</th>
+                <th scope="col">{{ _("Date") }}</th>
+            </tr>
+            </thead>
+            {% for application in applications %}
+                <tbody>
+                <tr>
+                    <td>
+                        <a href= {{ url_for(RouteConstants.AdminView.VERIFY_RECEIPTS, equipment_application_id= application.id ) }}>{{ _("Verify") }}</a>
+                    </td>
+                    <td>{{ application.id }}</td>
+                    <td>{{ application.equipment_type.name }}</td>
+                    <td>{{ application.donor.last_name + " "+ application.donor.first_name }}</td>
+                    <td><a href="mailto: {{ application.donor.email }}">{{ application.donor.email }}</a></td>
+                    <td>{{ application.updated_at }}</td>
+                </tr>
+                </tbody>
+            {% endfor %}
+
+        </table>
+    </div>
+    <div class="row">
+        <a href="{{ url_for(RouteConstants.AdminView.INDEX) }}" class="btn btn-primary">
+            {{ _("Back") }}
+        </a>
+    </div>
+{% endblock %}

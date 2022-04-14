@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block current_app_content %}
+    <div class="row">
+        <div class="col-md-6">
+            {{ wtf.quick_form(form) }}
+        </div>
+        <div class="col-md-6">
+            <img style="height: 400px" src="{{ teacher.user_photo }}">
+            {% if teacher.id_card_photo is defined %}
+                <img style="height: 400px" src="{{ teacher.id_card_photo }}">
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

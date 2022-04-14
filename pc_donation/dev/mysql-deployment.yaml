@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-deployment
+spec:
+  selector:
+    matchLabels:
+      app: mysql
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+        - env:
+            - name: MYSQL_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: web-secret
+                  key: DB_NAME
+            - name: MYSQL_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    key: web-secret
+                    name: DB_PASS
+            - name: MYSQL_ROOT_HOST
+              value: '%'
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: web-secret
+                  name: DB_PASS
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  key: web-secret
+                  name: DB_USER
+          image: mysql:5.7
+          name: mysql-con
+          ports:
+            - containerPort: 3306
+              name: mysql
+status: {}

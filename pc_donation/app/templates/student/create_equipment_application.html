@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block current_app_content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                {{ wtf.quick_form(form) }}
+            </div>
+            <div class="col-md-6">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">{{ _("Requested Equipment Type") }}</th>
+                    </tr>
+                    </thead>
+                    {% if equipment_application_list %}
+                        <tbody>
+                        {% for equipment_application in equipment_application_list %}
+                            <tr>
+                                <td>{{ equipment_application.equipment_type.name }}</td>
+                                <td>
+                                    <a class="btn btn-primary"
+                                       href="{{ url_for(RouteConstants.HasStoryStudentView.CANCEL_REQUESTED_EQUIPMENT_APPLICATION,
+                                       equipment_application_id=equipment_application.id) }}"
+                                       role="button">
+                                        {{ _("Cancel Request") }}
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    {% else %}
+                        <tbody>
+                        <tr>
+                            <td colspan="1">
+                                <center>
+                                    {{ _("No Record") }}
+                                </center>
+                            </td>
+                        </tr>
+                        </tbody>
+                    {% endif %}
+                </table>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-4">
+            <a href="{{ url_for(RouteConstants.StudentView.STORY) }}" class="btn btn-primary">
+                {{ _("Back to Story") }}
+            </a>
+        </div>
+        <div class="col-4">
+            <a href="{{ url_for(RouteConstants.StudentView.INDEX) }}" class="btn btn-primary">
+                {{ _("Back to Main Page") }}
+            </a>
+        </div>
+        <div class="col-4">
+            <a href="{{ url_for(RouteConstants.HasStoryStudentView.EQUIPMENT_APPLICATION_MAP) }}" class="btn btn-primary">
+                {{ _("Pick a location to get your equipment.") }}
+            </a>
+        </div>
+    </div>
+
+{% endblock %}

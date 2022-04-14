@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block current_app_content %}
+    {% if lang == 'zh_Hant' %}
+    {% 
+        set categorys_admin = [
+            {
+                'link_name': url_for(RouteConstants.AdminView.TEACHER_LIST),
+                'name': '管理教師帳戶申請',
+                'body': '批准教師申請',
+                'act': "進入"
+            }, {
+                'link_name': url_for(RouteConstants.AdminView.DONATION_LIST),
+                'name': '管理捐款收據',
+                'body': "批核捐贈收據。",
+                'act': "Enter"
+            }
+        ] 
+    %}
+    {% else %}
+    {%
+        set categorys_admin = [
+            {
+                'link_name': url_for(RouteConstants.AdminView.TEACHER_LIST),
+                'name': 'Manage Teacher Application',
+                'body': "Approve teacher application",
+                'act': "Enter"
+            }, {
+                'link_name': url_for(RouteConstants.AdminView.DONATION_LIST),
+                'name': 'Manage Donation Receipts',
+                'body': "Review and approve donation receipts.",
+                'act': "Enter"
+            }
+        ] 
+    %}
+    {% endif %}
+
+
+    <div class="category-card card-deck mb-3 text-center">
+        <div class="row">
+            {% for category in categorys_admin %}
+                <div class="col-sm d-inline-flex">
+                    <div class="card my-4 shadow-sm ">
+                        <div class="card-header">
+                            <h4 class="my-0 font-weight-normal">{{ category.name }}</h4>
+                        </div>
+                        <div class="card-body">
+                            <u1 class="mt-3 mb-4 h-4">{{ category.body }}</u1>
+                        </div>
+                        <div class="card-body">
+                            <button type="button" onclick="location.href='{{ category.link_name }}' "
+                                    class="btn btn-lg btn-block btn-outline-primary">Check Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

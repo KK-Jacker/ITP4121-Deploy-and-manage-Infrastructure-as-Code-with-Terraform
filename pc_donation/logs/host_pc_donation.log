@@ -1,0 +1,7 @@
+2022-04-13 19:54:45,714 INFO: result='Sentiment.MIXED', positive_score='0.51', neutral_score='0.05', negative_score='0.45' [in /home/osboxes/WebstormProjects/ITP4121-Deploy-and-manage-Infrastructure-as-Code-with-Terraform/pc_donation/app/azure_ai/text_analytics.py:50]
+2022-04-13 19:54:45,715 INFO: 85 [in /home/osboxes/WebstormProjects/ITP4121-Deploy-and-manage-Infrastructure-as-Code-with-Terraform/pc_donation/app/azure_ai/text_analytics.py:51]
+2022-04-13 19:54:45,715 INFO: urgency: 82.0 [in /home/osboxes/WebstormProjects/ITP4121-Deploy-and-manage-Infrastructure-as-Code-with-Terraform/pc_donation/app/azure_ai/text_analytics.py:59]
+2022-04-13 20:38:40,804 INFO: pc_donate startup [in /home/osboxes/WebstormProjects/ITP4121-Deploy-and-manage-Infrastructure-as-Code-with-Terraform/pc_donation/app/__init__.py:136]
+2022-04-13 20:39:23,735 INFO: pc_donate startup [in /home/osboxes/WebstormProjects/ITP4121-Deploy-and-manage-Infrastructure-as-Code-with-Terraform/pc_donation/app/__init__.py:136]
+2022-04-13 20:40:17,153 INFO: pc_donate startup [in /home/osboxes/WebstormProjects/ITP4121-Deploy-and-manage-Infrastructure-as-Code-with-Terraform/pc_donation/app/__init__.py:136]
+2022-04-13 20:41:02,263 INFO: pc_donate startup [in /home/osboxes/WebstormProjects/ITP4121-Deploy-and-manage-Infrastructure-as-Code-with-Terraform/pc_donation/app/__init__.py:136]

@@ -1,0 +1,15 @@
+/* Always set the map height explicitly to define the size of the div
+* element that contains the map. */
+#donate_map {
+    height: 80%;
+    width: 80%;
+}
+
+/* Optional: Makes the sample page fill the window. */
+body {
+    text-align: center;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}

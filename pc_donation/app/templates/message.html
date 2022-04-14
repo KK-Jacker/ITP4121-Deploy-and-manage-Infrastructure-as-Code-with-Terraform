@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block current_app_content %}
+    <div class="container">
+        <div class="row">
+            <h1>{{ title }}</h1>
+        </div>
+        <div class="row">
+            {{ wtf.quick_form(form, form_type="inline") }}
+        </div>
+        <div class="row">
+            {{ wtf.form_errors(form) }}
+        </div>
+        <div class="row">
+            <p class="text-warning">{{ _("Remember don't share your personal informaton!") }}</p>
+        </div>
+        <div class="row">
+            <h1>{{ _("Message History") }}</h1>
+        </div>
+        <div class="row">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">{{ other_role }}</th>
+                    <th scope="col">{{ _("Message") }}</th>
+                    <th scope="col">{{ _("You") }}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for message in messages %}
+                    {% if message.from_student %}
+                        <tr>
+                            <td>{{ message.student }}<br/>{{ moment(message.created_at).format("LLL") }}:<br/>
+                                {{ message.message }}</td>
+                            <td></td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td></td>
+                            <td>
+                                {{ message.message }}</td>
+                            <td>{{ message.other }}<br/>{{ moment(message.created_at).format("LLL") }}</td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            </table>
+        </div>
+        <div class="row">
+            {% if user_type=="student" %}
+                <a href="{{ url_for(RouteConstants.StudentView.INDEX) }}" class="btn btn-primary">
+                    {{ _("Back") }}
+                </a>
+            {% elif user_type=="donor" %}
+                <a href="{{ url_for(RouteConstants.DonorView.INDEX) }}" class="btn btn-primary">
+                    {{ _("Back") }}
+                </a>
+            {% elif user_type=="volunteer" %}
+                <a href="{{ url_for(RouteConstants.VolunteerView.INDEX) }}" class="btn btn-primary">
+                    {{ _("Back") }}
+                </a>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

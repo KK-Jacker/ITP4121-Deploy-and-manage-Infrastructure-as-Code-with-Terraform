@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block current_app_content %}
+    <h1>{{ _("Edit Profile") }}</h1>
+    <div class="row">
+        <div class="col-md-6">
+            {{ wtf.quick_form(form) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6 col-md-6 col-lg-6">
+            <a href="{{ url_for(RouteConstants.MainView.USER, username=username) }}" class="btn btn-primary col-md-4">
+                {{ _("Back") }}
+            </a>
+        </div>
+    </div>
+{% endblock %}

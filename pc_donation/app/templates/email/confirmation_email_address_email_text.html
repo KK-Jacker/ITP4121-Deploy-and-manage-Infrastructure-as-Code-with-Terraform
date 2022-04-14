@@ -1,0 +1,14 @@
+{% extends "email/layouts/email_text.html" %}
+
+{% block content %}
+    Thank you for your registration and please confirm your email address.
+    Please open this link {{ data.url }}
+{% endblock %}
+
+{% block content_zh %}
+    感謝您的帳戶註冊，請確認您的電子郵件地址。
+    請打開此鏈接 {{ data.url }}
+{% endblock %}
+{% block footer %}
+
+{% endblock %}

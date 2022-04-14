@@ -1,0 +1,14 @@
+{% extends "email/layouts/email.html" %}
+{% set p_style = "font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 15px;" %}
+{% block content %}
+    <p style="{{ p_style }} color: #848484;">Your equipment application has been rejected by your teacher.</p>
+    <a href="{{ data.url }}">Click here to login.</a>
+{% endblock %}
+{% block content_zh %}
+    <p style="{{ p_style }} color: #848484;">您的設備申請已被您的老師拒絕。</p>
+    <a href="{{ data.url }}">點擊此處登錄.</a>
+{% endblock %}
+
+{% block footer %}
+
+{% endblock %}

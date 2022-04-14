@@ -1,0 +1,14 @@
+{% extends "email/layouts/email_text.html" %}
+
+{% block content %}
+    This is a thank you letter from {{ data.from }}.
+    {{ data.message }}
+{% endblock %}
+
+{% block content_zh %}
+    這是一封來自 {{ data.from }} 的感謝信.
+    {{ data.message }}
+{% endblock %}
+{% block footer %}
+
+{% endblock %}

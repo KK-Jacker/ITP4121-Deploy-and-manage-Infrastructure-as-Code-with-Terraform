@@ -1,0 +1,14 @@
+{% extends "email/layouts/email_text.html" %}
+
+{% block content %}
+    Your account has activated.
+    Please open this link {{ data.url }} to login.
+{% endblock %}
+
+{% block content_zh %}
+    您的帳戶已啟動。
+    登錄請打開此鏈接 {{ data.url }}
+{% endblock %}
+{% block footer %}
+
+{% endblock %}

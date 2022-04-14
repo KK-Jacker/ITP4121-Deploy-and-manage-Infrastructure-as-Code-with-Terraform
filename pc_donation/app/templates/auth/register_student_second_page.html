@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block current_app_content %}
+    <div class="row">
+        <div class="col">
+            <h1>{{ _("Student") }}</h1>
+            <form action="{{ action }}" method="post">
+                {{ form.hidden_tag() }}
+                <div class="form-group">
+                    <label class="form-control-label">{{ _("Pin your home location") }}</label>
+                    <div id="google_map" class="z-depth-1-half map-container center-block col-md-12"
+                         style="height: 600px">
+                        <iframe src="https://maps.google.com/maps" frameborder="0" style="border:0"
+                                allowfullscreen></iframe>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label">{{ _("Select your school category") }}</label>
+                    <select id="schoolCategory" class="form-control">
+                        {% for key, val in school_categories | dictsort %}
+                            <option value="{{ key }}">{{ val }}</option>"
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label">{{ _("Select your school") }}</label>
+                    <label id="selectedSchool" class="form-control-label"></label>
+                    <div id="school_map" class="z-depth-1-half map-container center-block col-md-12"
+                         style="height: 600px">
+                        <iframe src="https://maps.google.com/maps" frameborder="0" style="border:0"
+                                allowfullscreen></iframe>
+                    </div>
+                </div>
+                <div class="form-group">
+                    {{ wtf.form_field(form.id_card_number, class="form-control", placeholde="{{ _('Please enter your ID Card number') }}") }}
+                </div>
+                <div class="form-group">
+                    {{ wtf.form_field(form.home_address, class="form-control", placeholde="{{ _('Please enter your home address') }}") }}
+                </div>
+
+                <div class="form-group">
+                    {{ wtf.form_field(form.email, class="form-control", placeholde="{{ _('Please enter your school email') }}") }}
+                </div>
+                <div class="form-group">
+                    {{ wtf.form_field(form.teacher_email, class="form-control", placeholde="{{ _('Please enter your teacher\'s email') }}") }}
+                </div>
+                <button class="btn btn-primary" type="submit" name="location" value=""
+                        id="submit">{{ _("Submit") }}
+                </button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block current_app_scripts %}
+    <script type="text/javascript" src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <script type="text/javascript"
+            src="https://maps.googleapis.com/maps/api/js?key={{ google_map_key }}&callback=mapCallback&libraries=&v=weekly"
+            defer></script>
+    <script type="text/javascript"
+            src="{{ url_for(RouteConstants.STATIC, filename="js/markerclusterer.js") }}"></script>
+    <script type="text/javascript" src="{{ url_for(RouteConstants.STATIC, filename="js/map.js") }}"></script>
+    <script type="text/javascript">
+        let domain;
+
+        function mapCallback() {
+            function homeMarkerPinned(point) {
+                console.log(point);
+                $("#latitude").val(point.latitude);
+                $("#longitude").val(point.longitude);
+            }
+
+            singlePinMap(homeMarkerPinned);
+
+            function schoolMarkerClick(data) {
+                console.log(data);
+                domain = data.marker.get("domain");
+
+                $("#email").prop('disabled', false).val(domain);
+                $("#teacher_email").prop('disabled', false).val(domain);
+                $("#school_id").val(data.id);
+                $("#selectedSchool").html(` - ${data.title}`);
+            }
+
+            schoolMap(schoolMarkerClick);
+        }
+        $(document).ready(function () {
+            $("#email").prop('disabled', true);
+            $("#teacher_email").prop('disabled', true);
+            $("#submit").click(function () {
+                if ($("#latitude").val() === "" || $("#longitude").val() === "") {
+                    alert("{{ _("Please pin a point in the home map!") }}");
+                    return false;
+                } else if ($("#school_id").val() === "") {
+                    alert("{{ _("Please select your school in the school map!") }}");
+                    return false;
+                } else if (!$("#email").val().endsWith(domain)) {
+                    alert("{{ _("Invalid student email address must match school domain.") }}");
+                    return false;
+                } else if (!$("#teacher_email").val().endsWith(domain)) {
+                    alert("{{ _("Invalid teacher email address must match school domain.") }}");
+                    return false;
+                }
+            });
+        });
+    </script>
+{% endblock %}

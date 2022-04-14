@@ -1,0 +1,65 @@
+version: '3.3'
+
+services:
+  web:
+    build:
+      context: ../
+      dockerfile: dev/Dockerfile
+    environment:
+      FLASK_ENV: development
+      DATABASE_HOST: mysql
+      MAIL_SERVER: smtp4dev
+      NGINX_PORT: 8080
+      VAULT_URL: ${VAULT_URL}
+      AZURE_CLIENT_ID: ${AZURE_CLIENT_ID}
+      AZURE_TENANT_ID: ${AZURE_TENANT_ID}
+      AZURE_CLIENT_SECRET: ${AZURE_CLIENT_SECRET}
+    ports:
+      - '80:5000'
+    volumes:
+      - ./../app:/home/pc_donation/app
+      - ./../logs:/home/pc_donation/logs
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:5.7
+    container_name: dev_mysql
+    environment:
+      MYSQL_USER: user
+      MYSQL_PASSWORD: user
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: default_schema
+      MYSQL_ROOT_HOST: '%'
+    ports:
+      - '3306:3306'
+    volumes:
+      - ./data-mysql:/var/lib/mysql
+    cap_add:
+      - SYS_NICE
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: dev_pma
+    links:
+      - mysql
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+    restart: always
+    ports:
+      - '5001:80'
+
+  smtp4dev:
+    image: rnwood/smtp4dev:v3
+    restart: always
+    ports:
+      - '5002:80'
+      - '25:25'
+      - '143:143'
+    volumes:
+      - ./smtp4dev-data:/smtp4dev
+    environment:
+      - ServerOptions__HostName=smtp4dev
+      - ServerOptions__Database=/smtp4dev/database.db

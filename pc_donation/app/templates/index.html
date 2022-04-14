@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+
+{% block current_app_content %}
+    <section class="slice slice-xl bg-cover bg-size--cover pb-300" data-offset-top="#header-main"
+             style="background-image: url('{{ url_for(RouteConstants.STATIC, filename='background/donation_background_demo.jpg') }}'); padding-top: 147.188px;">
+        <span class="mask bg-dark opacity-8"></span>
+        <div class="container pt-7">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="text-center">
+                        <h2 class="display-4 text-white mb-2">{{ _("iShare Donation System") }}</h2>
+                        <div class="row justify-content-center">
+                            <div class="col-lg-6">
+                                <p class="lead text-white lh-180">{{ _("A system for donating item to student who need.") }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="slice bg-section-secondary">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-12">
+                    <div class="text-center">
+                        <h2 class="display-4 mb-2">{{ _("Join Now") }}</h2>
+                    </div>
+                </div>
+                {% for category in categories %}
+                    <div class="col-lg-4 col-sm-6">
+                        <div class="card my-4 shadow-sm text-center hover-shadow-lg hover-translate-y-n10 h-100">
+                            <div class="card-header">
+                                <h4 class="my-0 font-weight-normal">{{ _(category.name) }}</h4>
+                            </div>
+                            <div class="card-body">
+                                <u1 class="mt-3 mb-4 h-4">{{ _(category.body) }}</u1>
+                            </div>
+                            <div class="card-footer">
+                                <button type="button" onclick="location.href='{{ _(category.link_name) }}' "
+                                        class="btn btn-lg btn-block btn-outline-primary">{{ _("Join Now") }}</button>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                <div class="col-lg-12">
+                    <div class="text-center">
+                        <h2 class="display-4 mb-4 mt-8">{{ _("Need Help?") }}</h2>
+                        <h4 class="mb-2">{{ _("Use below Q&A Chatbot") }}</h4>
+                        <iframe src="https://webchat.botframework.com/embed/ishare-Web-bot?s={{ key }}"
+                                style="min-width: 400px; width: 100%; min-height: 500px;"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

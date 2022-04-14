@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block current_app_content %}
+
+    <div class="row">
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">{{ _("Action") }}</th>
+                <th scope="col">{{ _("Status") }}</th>
+                <th scope="col">{{ _("First Name") }}</th>
+                <th scope="col">{{ _("Last Name") }}</th>
+                <th scope="col">{{ _("Student Email") }}</th>
+            </tr>
+            </thead>
+            {% for student in records %}
+                <tbody>
+                <tr>
+                    {% if student.status == StudentStatusEnum.not_activated or student.status == StudentStatusEnum.student_activated_wait_for_teacher_approval %}
+                        <td>
+                            <a href="{{ url_for(RouteConstants.TeacherView.TEACHER_APPROVED_STUDENT, student_id = student.id ) }}"
+                               class="btn btn-primary">Approve</a>
+                        </td>
+                    {% else %}
+                        <td>
+                            {{ _("Approved") }}
+                        </td>
+                    {% endif %}
+                    <td>{{ student.status.name }}</td>
+                    <td>{{ student.first_name }}</td>
+                    <td>{{ student.last_name }}</td>
+                    <td><a href="mailto: {{ student.email }}">{{ student.email }}</a></td>
+                </tr>
+                </tbody>
+            {% endfor %}
+            <div>
+                {% if record %}
+                {% else %}
+                    {{ _("No Record") }}
+                {% endif %}
+            </div>
+        </table>
+    </div>
+    <div>
+        <ul class="nav justify-content-center">
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for(RouteConstants.TeacherView.TEACHER_APPROVED_STUDENT_LIST, page=1) }}"> << </a>
+            </li>
+            {% if page > 1 %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for(RouteConstants.TeacherView.TEACHER_APPROVED_STUDENT_LIST, page=page - 1) }}"> < </a>
+                </li>
+            {% endif %}
+            {% for i in page_list %}
+                {% if i == page %}
+                    <li class="nav-item">
+                        <a class="nav-link" style="background-color:#efefef;" href="{{ url_for(RouteConstants.TeacherView.TEACHER_APPROVED_STUDENT_LIST, page=i) }}"><u>{{ i }}</u></a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for(RouteConstants.TeacherView.TEACHER_APPROVED_STUDENT_LIST, page=i) }}">{{ i }}</a>
+                     </li>
+                {% endif %}
+            {% endfor %}
+            {% if page < last_page %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for(RouteConstants.TeacherView.TEACHER_APPROVED_STUDENT_LIST, page=page + 1) }}"> > </a>
+                </li>
+            {% endif %}
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for(RouteConstants.TeacherView.TEACHER_APPROVED_STUDENT_LIST, page=last_page) }}"> >> </a>
+            </li>
+        </ul>
+    </div>
+    <div class="col-md-2">
+        <a href="{{ url_for(RouteConstants.TeacherView.INDEX) }}" class="btn btn-primary">
+            {{ _("Back") }}
+        </a>
+    </div>
+{% endblock %}

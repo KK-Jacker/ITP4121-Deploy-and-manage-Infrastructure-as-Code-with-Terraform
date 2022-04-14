@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block current_app_content %}
+    <div class="row">
+        {% for student_case in repair_record %}
+            <div class="card col-6">
+                <img class="card-img-top" src="{{ student_case.equipment_photo }}" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">{{ student_case.title }}</h5>
+                    <p class="card-text">{{ student_case.description }}</p>
+                    <p class="card-text">{{ student_case.status.name }}</p>
+                    <p class="card-text">{{ student_case.student.first_name }} {{ student_case.student.last_name }}</p>
+                    <p class="card-text">{{ student_case.time }}</p>
+                    {% if student_case.status ==  RepairApplicationStatusEnum.repairing %}
+                        <a class="btn btn-primary"
+                           href="{{ url_for(RouteConstants.VolunteerView.MSG_TO_STUDENT, repair_application_id=student_case.id) }}"
+                           role="button">{{ _("Message") }}</a>
+                        <a class="btn btn-primary"
+                           href="{{ url_for(RouteConstants.VolunteerView.EDIT_REPAIR_APPLICATION, repair_application_id=student_case.id) }}"
+                           role="button">{{ _("Edit") }}</a>
+                        <a class="btn btn-primary confirm"
+                           href="{{ url_for(RouteConstants.VolunteerView.CANCEL_MAKE_REPAIR_APPLICATION, repair_application_id=student_case.id) }}"
+                           role="button">{{ _("Cancel") }}</a>
+                    {% elif student_case.status ==  RepairApplicationStatusEnum.repaired %}
+
+                    {% elif student_case.status ==  RepairApplicationStatusEnum.completed %}
+
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <div>
+        <ul class="nav justify-content-center">
+            <li class="nav-item">
+                <a class="nav-link"
+                   href="{{ url_for(RouteConstants.VolunteerView.VOLUNTEER_RECORD, page=1) }}"> << </a>
+            </li>
+            {% if page > 1 %}
+                <li class="nav-item">
+                    <a class="nav-link"
+                       href="{{ url_for(RouteConstants.VolunteerView.VOLUNTEER_RECORD, page=page - 1) }}">
+                        < </a>
+                </li>
+            {% endif %}
+            {% for i in page_list %}
+                {% if i == page %}
+                    <li class="nav-item">
+                        <a class="nav-link" style="background-color:#efefef;"
+                           href="{{ url_for(RouteConstants.VolunteerView.VOLUNTEER_RECORD, page=i) }}"><u>{{ i }}</u></a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link"
+                           href="{{ url_for(RouteConstants.VolunteerView.VOLUNTEER_RECORD, page=i) }}">{{ i }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+            {% if page < last_page %}
+                <li class="nav-item">
+                    <a class="nav-link"
+                       href="{{ url_for(RouteConstants.VolunteerView.VOLUNTEER_RECORD, page=page + 1) }}">
+                        > </a>
+                </li>
+            {% endif %}
+            <li class="nav-item">
+                <a class="nav-link"
+                   href="{{ url_for(RouteConstants.VolunteerView.VOLUNTEER_RECORD, page=last_page) }}">
+                    >> </a>
+            </li>
+        </ul>
+    </div>
+    <div class="row">
+        <a href="{{ url_for(RouteConstants.VolunteerView.INDEX) }}" class="btn btn-primary">
+            {{ _("Back") }}
+        </a>
+    </div>
+{% endblock %}
+{% block current_app_scripts %}
+    <script>
+        $('.confirm').on('click', function () {
+            return confirm('{{ _("Are you sure?") }}');
+        });
+    </script>
+{% endblock %}
