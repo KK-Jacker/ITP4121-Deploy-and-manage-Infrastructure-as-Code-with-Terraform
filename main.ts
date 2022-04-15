@@ -8,9 +8,6 @@ import {ChatBotConstruct} from "./azure/chatbot";
 import {ContainerRegistrySConstruct} from "./azure/container_registry";
 import {CognitiveServiceConstruct} from "./azure/cognitive_service";
 import {KeyVaultConstruct} from "./azure/key_vault";
-/*import {MySQLServerConstruct} from "./azure/mysql_server";
-import {MySQLDatabaseConstruct} from "./azure/mysql_db";
-import {MySQLFirewallConstruct} from "./azure/mysql_db_firewall";*/
 import {VirtualNetworkConstruct} from "./azure/virtual_network";
 import {KubernetesClusterSConstruct} from "./azure/kubernetes";
 import {resolve} from "path";
@@ -66,15 +63,6 @@ export class MainStack extends TerraformStack {
             azureadConstruct: azureAdConstruct,
         });
 
-        new KubernetesClusterSConstruct(this, "Kubernetes", {
-            resourceGroup,
-            virtualNetwork: virtualNetworkConstruct,
-            azureAdConstruct: azureAdConstruct,
-            containerRegistry: containerRegistrySConstruct,
-        });
-
-
-
         const applicationInsightsConstruct = new ApplicationInsightsConstruct(this, "Application insights", {
             resourceGroup,
         });
@@ -94,6 +82,14 @@ export class MainStack extends TerraformStack {
             applicationInsightsKey: applicationInsightsConstruct.applicationInsights.instrumentationKey,
             webChatBotSecret: chatBotConstruct.webChatBotSecret,
             cognitiveServiceConstruct
+        });
+
+        new KubernetesClusterSConstruct(this, "Kubernetes", {
+            resourceGroup,
+            virtualNetwork: virtualNetworkConstruct,
+            azureAdConstruct: azureAdConstruct,
+            containerRegistry: containerRegistrySConstruct,
+            keyVaultConstruct: keyVaultConstruct,
         });
 
         new TerraformOutput(
@@ -129,12 +125,6 @@ export class MainStack extends TerraformStack {
             this,
             "Container Registry Identity",
             {value: containerRegistrySConstruct.containerRegistry.identity, sensitive: true}
-        );
-30306
-        new TerraformOutput(
-            this,
-            "Public IP Address",
-            {value: virtualNetworkConstruct.publicIp.ipAddress, sensitive: true}
         );
 
         new TerraformOutput(
