@@ -3,6 +3,7 @@ import {KubernetesCluster, ResourceGroup} from "@cdktf/provider-azurerm";
 import {AzureAdConstruct} from "./azure_ad";
 import {VirtualNetworkConstruct} from "./virtual_network"
 import {ContainerRegistrySConstruct} from "./container_registry"
+import {KeyVaultConstruct} from "./key_vault"
 import {Resource} from "@cdktf/provider-null";
 import {DataLocalFile} from "../.gen/providers/local/data-local-file";
 
@@ -11,6 +12,7 @@ interface KubernetesClusterSConstructProps {
     virtualNetwork: VirtualNetworkConstruct;
     azureAdConstruct: AzureAdConstruct;
     containerRegistry: ContainerRegistrySConstruct;
+    keyVaultConstruct: KeyVaultConstruct;
 }
 
 export class KubernetesClusterSConstruct extends Construct {
@@ -34,12 +36,6 @@ export class KubernetesClusterSConstruct extends Construct {
                 resourceGroupName: resourceGroup.name,
                 location: resourceGroup.location,
                 dnsPrefix: process.env.PROJECT_NAME! + process.env.ENV + "-dns",
-                addonProfile: [{
-                    ingressApplicationGateway: [{
-                        enabled: true,
-                        gatewayId: virtualNetwork.applicationGateway.id,
-                    }]
-                }],
                 defaultNodePool: [{
                     name: "np01",
                     nodeCount: 1,
@@ -82,8 +78,9 @@ export class KubernetesClusterSConstruct extends Construct {
         });
         const kubectl = new Resource(this, "kubectl", {
             triggers: {
+                dummy: new Date().getMilliseconds().toString()
             },
-            dependsOn: [this.kubernetesCluster, get_image_var],
+            dependsOn: [this.kubernetesCluster, get_image_var, props.keyVaultConstruct.keyVault],
         });
 
         const db_user = process.env.MYSQL_SERVER_ADMIN_USERNAME!.toLowerCase() //+ "@" + process.env.PROJECT_NAME! + process.env.ENV
@@ -102,10 +99,11 @@ export class KubernetesClusterSConstruct extends Construct {
             "provisioner.local-exec.command", `az aks get-credentials --resource-group ${resource_group_name} --name ${kubernetes_name} --overwrite-existing && \
             cd ../../../pc_donation/ && export DB_USER=${db_user} && export DB_PASS=${db_pass} && export DB_HOST=${db_host} && export DB_NAME=${db_name} && export DB_PORT=3306 export IMAGE=${image} \
              export VAULT_URL=${vault_url} && export AZURE_CLIENT_ID=${azure_client_id} && export AZURE_CLIENT_SECRET=${azure_client_secret} && export AZURE_TENANT_ID=${azure_tenant_id} && \
-             kubectl create secret generic web-secret --from-literal='IMAGE=${image}' --from-literal='DB_PORT=3306' --from-literal='DB_USER=${db_user}' --from-literal='DB_PASS=${db_pass}' --from-literal='DB_HOST=${db_host}' --from-literal='DB_NAME=${db_name}' && \
+             kubectl create secret generic web-secret --from-literal='IMAGE=${image}' --from-literal='port="3306"' --from-literal='username=${db_user}' --from-literal='password=${db_pass}' --from-literal='host=${db_host}' --from-literal='tablename=${db_name}' && \
              kubectl create secret docker-registry azurecr-secret --namespace default --docker-server=${azurecr_loginserver} --docker-username=${azure_client_id} --docker-password=${azure_client_secret} --
-             envsubst < web-deployment.yaml | kubectl apply -f - && kubectl apply -f web-service.yaml,web-ingress.yaml,mysql-deployment.yaml,mysql-service.yaml
+             kubectl apply -f mysql-deployment.yaml,mysql-service.yaml && envsubst < web-deployment.yaml | kubectl apply -f - && kubectl apply -f web-service.yaml
              `
         );
     }
 }
+// if work on SSL/TLS, add  "web-ingress.yaml" to above for kubectl to apply
