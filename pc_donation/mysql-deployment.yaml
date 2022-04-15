@@ -17,9 +17,7 @@ spec:
         - env:
             - name: MYSQL_DATABASE
               valueFrom:
-                secretKeyRef:
-                  name: web-secret
-                  key: DB_NAME
+              value: default_schema
             - name: MYSQL_PASSWORD
               value: 123qweasd
             - name: MYSQL_ROOT_HOST
