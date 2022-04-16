@@ -13,6 +13,9 @@ import {KubernetesClusterSConstruct} from "./azure/kubernetes";
 import {resolve} from "path";
 import {config, parse} from "dotenv";
 import * as fs from "fs";
+import {Resource} from "@cdktf/provider-null";
+import {DataLocalFile} from "./.gen/providers/local";
+
 
 
 interface MainStackProps {
@@ -84,13 +87,29 @@ export class MainStack extends TerraformStack {
             cognitiveServiceConstruct
         });
 
-        new KubernetesClusterSConstruct(this, "Kubernetes", {
+        const kubernetesClusterSConstruct = new KubernetesClusterSConstruct(this, "Kubernetes", {
             resourceGroup,
             virtualNetwork: virtualNetworkConstruct,
             azureAdConstruct: azureAdConstruct,
             containerRegistry: containerRegistrySConstruct,
             keyVaultConstruct: keyVaultConstruct,
         });
+
+        const get_k8s_exposed_ip = new Resource(this, "kubectlDownload", {
+            triggers: {
+            },
+            dependsOn: [kubernetesClusterSConstruct.kubectl],
+        });
+        get_k8s_exposed_ip.addOverride("provisioner.local-exec.command",
+            `sleep 10 && kubectl get service -l app=web -o json | jq -r .items[].status.loadBalancer.ingress[].ip > k8sexposedip.txt`
+        );
+
+        const k8sip = new DataLocalFile(this, "hash_content", {
+            filename: "k8sexposedip.txt",
+            dependsOn: [get_k8s_exposed_ip],
+        });
+
+        const k8sipcontent = k8sip.content
 
         new TerraformOutput(
             this,
@@ -132,6 +151,13 @@ export class MainStack extends TerraformStack {
             "Key Vault Uri",
             {value: keyVaultConstruct.keyVault.vaultUri, sensitive: true}
         );
+
+        new TerraformOutput(
+            this,
+            "K8s LoadBalancer IP",
+            {value: k8sipcontent, sensitive: true}
+        );
+
 
     }
 }
