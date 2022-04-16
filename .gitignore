@@ -11,5 +11,5 @@ secrets.env.template
 webchat_secrets.json
 pc_donation/venv
 pc_donation/logs
-*.pem
-*.pfx
+pc_donation/*.pem
+pc_donation/*.pfx
