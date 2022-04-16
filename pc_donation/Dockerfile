@@ -29,7 +29,7 @@ RUN venv/bin/pip3 install -r requirements.txt
 RUN venv/bin/pip3 install gunicorn
 COPY app app
 COPY migrations migrations
-COPY pc_donation.py config.py run.py boot.sh nginx.sh web.sh ./
+COPY pc_donation.py config.py run.py boot.sh nginx.sh web.sh fullchain.pem privkey.pem ./
 RUN chmod +x boot.sh nginx.sh web.sh
 
 COPY nginx.conf /etc/nginx/
