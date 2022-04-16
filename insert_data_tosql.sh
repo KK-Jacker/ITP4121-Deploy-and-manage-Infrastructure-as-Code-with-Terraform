@@ -7,7 +7,8 @@ export AZURE_CLIENT_ID=$(cat $STACK_OUTPUT  | jq -r .ServicePrincipalAppId.value
 export AZURE_TENANT_ID=$(cat $STACK_OUTPUT  | jq -r .ServicePrincipalTenantId.value) && \
 export AZURE_CLIENT_SECRET=$(cat $STACK_OUTPUT  | jq -r .ServicePrincipalPassword.value) && \
 export $(grep MYSQL_SCHEMA_NAME= ./dev.env) && export DB_NAME=${MYSQL_SCHEMA_NAME} && \
-export DB_HOST=127.0.0.1 && export DB_PORT=30306 && export DB_USER="root" && export DB_PASS="123qweasd"
+export $(grep MYSQL_SERVER_ADMIN_PASSWORD= ./dev.env) && export DB_PASS=${MYSQL_SERVER_ADMIN_PASSWORD} && \
+export DB_HOST=127.0.0.1 && export DB_PORT=30306 && export DB_USER="root"
 cd pc_donation
 mysql -h 127.0.0.1 -P 30306 -u ${DB_USER} --password=${DB_PASS} -e "CREATE DATABASE IF NOT EXISTS ${DB_NAME};"
 mysql -h 127.0.0.1 -P 30306 -u ${DB_USER} --password=${DB_PASS} ${DB_NAME} < ./mysql.sql
