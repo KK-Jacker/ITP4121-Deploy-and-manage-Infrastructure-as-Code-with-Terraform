@@ -17,6 +17,7 @@ interface KubernetesClusterSConstructProps {
 
 export class KubernetesClusterSConstruct extends Construct {
     public readonly kubernetesCluster: KubernetesCluster;
+    public readonly kubectl: Resource;
     constructor(
         scope: Construct,
         name: string,
@@ -76,11 +77,11 @@ export class KubernetesClusterSConstruct extends Construct {
             filename: "branch.txt",
             dependsOn: [get_image_var],
         });
-        const kubectl = new Resource(this, "kubectl", {
+        this.kubectl = new Resource(this, "kubectl", {
             triggers: {
                 dummy: new Date().getMilliseconds().toString()
             },
-            dependsOn: [this.kubernetesCluster, get_image_var, props.keyVaultConstruct.keyVault],
+            dependsOn: [this.kubernetesCluster, get_image_var, props.keyVaultConstruct.keyVault, props.containerRegistry.containerRegistry],
         });
 
         const db_user = process.env.MYSQL_SERVER_ADMIN_USERNAME!.toLowerCase() //+ "@" + process.env.PROJECT_NAME! + process.env.ENV
@@ -95,7 +96,7 @@ export class KubernetesClusterSConstruct extends Construct {
         const resource_group_name = resourceGroup.name;
         const kubernetes_name = this.kubernetesCluster.name;
         const azurecr_loginserver = props.containerRegistry.containerRegistry.loginServer;
-        kubectl.addOverride(
+        this.kubectl.addOverride(
             "provisioner.local-exec.command", `az aks get-credentials --resource-group ${resource_group_name} --name ${kubernetes_name} --overwrite-existing && \
             cd ../../../pc_donation/ && export DB_USER=${db_user} && export DB_PASS=${db_pass} && export DB_HOST=${db_host} && export DB_NAME=${db_name} && export DB_PORT=3306 export IMAGE=${image} \
              export VAULT_URL=${vault_url} && export AZURE_CLIENT_ID=${azure_client_id} && export AZURE_CLIENT_SECRET=${azure_client_secret} && export AZURE_TENANT_ID=${azure_tenant_id} && \
