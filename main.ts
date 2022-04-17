@@ -1,8 +1,9 @@
 import {Construct} from "constructs";
 import {App, /*TerraformOutput,*/ TerraformStack} from "cdktf";
+import {AwsProvider} from "@cdktf/provider-aws";
 import {resolve} from "path";
-import {config, parse} from "dotenv";
-import * as fs from "fs";
+import {config} from "dotenv";
+import {VirtualNetworkConstruct} from "./aws/aws_vpc";
 interface MainStackProps {
     env: string;
 }
@@ -16,14 +17,12 @@ export class MainStack extends TerraformStack {
         process.env.RESOURCE_GROUP_NAME = process.env.RESOURCE_GROUP_NAME + props.env;
         console.log("Resource Group:" + process.env.RESOURCE_GROUP_NAME);
 
-        if (fs.existsSync(resolve(__dirname, `./secrets.env`))) {
-            console.log("Overrides with secrets.env.template");
-            const envConfig = parse(fs.readFileSync(resolve(__dirname, `./secrets.env`)))
-            for (const k in envConfig) {
-                process.env[k] = envConfig[k]
-            }
-        }
+        new AwsProvider(this, "AWS Provider", {
+            region: "ap-east-1",
+            sharedCredentialsFile: "~/.aws/credentials",
+        })
 
+         new VirtualNetworkConstruct(this, "Virtual Network ");
 
 
     }
