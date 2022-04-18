@@ -1,6 +1,19 @@
-# Learn Terraform - Provision a GKE Cluster
+# ITP4121-Deploy-and-manage-Infrastructure-as-Code-with-Terraform
+create multiple public cloud infrastructure and Kubernetes deployment with Terraform or CDK-TF.
 
-This repo is a companion repo to the [Provision a GKE Cluster learn guide](https://learn.hashicorp.com/terraform/kubernetes/provision-gke-cluster), containing Terraform configuration files to provision an GKE cluster on GCP.
+This is GCP branch.
 
-This sample repo also creates a VPC and subnet for the GKE cluster. This is not
-required but highly recommended to keep your GKE cluster isolated.
+Before deploy please make sure your system have installed following software:
+
+gcloud-cli, mysql client (v5.7 recommanded), terraform, jq
+
+How to deploy:
+
+1. terraform init
+2. ./deploy.sh
+
+How to import data to mysql in k8s :
+
+1. kubectl port-forward service/mysql-service 30306:3306
+2. ./insert_data_to_mysql.sh
+
