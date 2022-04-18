@@ -81,11 +81,11 @@ export class KubernetesClusterSConstruct extends Construct {
             triggers: {
                 dummy: new Date().getMilliseconds().toString()
             },
-            dependsOn: [this.kubernetesCluster, get_image_var, props.keyVaultConstruct.keyVault, props.containerRegistry.containerRegistry],
+            dependsOn: [this.kubernetesCluster, get_image_var, props.keyVaultConstruct.keyVault, props.containerRegistry.builddocker],
         });
 
-        const db_user = process.env.MYSQL_SERVER_ADMIN_USERNAME!.toLowerCase() //+ "@" + process.env.PROJECT_NAME! + process.env.ENV
-        const db_pass = process.env.MYSQL_SERVER_ADMIN_PASSWORD!.toLowerCase()
+        const db_user = process.env.MYSQL_SERVER_ADMIN_USERNAME! //+ "@" + process.env.PROJECT_NAME! + process.env.ENV
+        const db_pass = process.env.MYSQL_SERVER_ADMIN_PASSWORD!
         const db_host = "mysql-service"
         const db_name = process.env.MYSQL_SCHEMA_NAME;
         const image= process.env.PROJECT_NAME! + process.env.ENV + ".azurecr.io/" + process.env.PROJECT_NAME! + "-" + branch_content.content + ":" + hash_content.content ;
@@ -107,4 +107,3 @@ export class KubernetesClusterSConstruct extends Construct {
         );
     }
 }
-// if work on SSL/TLS, add  "web-ingress.yaml" to above for kubectl to apply
