@@ -1,4 +1,5 @@
 azure-ai-formrecognizer==3.1.2
+azure-ai-textanalytics==5.1.0
 azure-cognitiveservices-vision-face==0.5.0
 azure-identity==1.6.1
 azure-keyvault-secrets==4.3.0
