@@ -95,13 +95,13 @@ export class MainStack extends TerraformStack {
             keyVaultConstruct: keyVaultConstruct,
         });
 
-        const get_k8s_exposed_ip = new Resource(this, "kubectlDownload", {
+        const get_k8s_exposed_ip = new Resource(this, "get kubectl exposed ip", {
             triggers: {
             },
             dependsOn: [kubernetesClusterSConstruct.kubectl],
         });
         get_k8s_exposed_ip.addOverride("provisioner.local-exec.command",
-            `sleep 10 && kubectl get service -l app=web -o json | jq -r .items[].status.loadBalancer.ingress[].ip > k8sexposedip.txt`
+            `sleep 30 && kubectl get service -l app=web -o json | jq -r .items[].status.loadBalancer.ingress[].ip > k8sexposedip.txt`
         );
 
         const k8sip = new DataLocalFile(this, "hash_content", {
