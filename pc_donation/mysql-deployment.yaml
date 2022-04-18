@@ -16,16 +16,31 @@ spec:
       containers:
         - env:
             - name: MYSQL_DATABASE
+              #value: default_schema
               valueFrom:
-              value: default_schema
+                secretKeyRef:
+                  name: web-secret
+                  key: tablename
             - name: MYSQL_PASSWORD
-              value: 123qweasd
+              #value: 123qweasd
+              valueFrom:
+                secretKeyRef:
+                  name: web-secret
+                  key: password
             - name: MYSQL_ROOT_HOST
               value: '%'
             - name: MYSQL_ROOT_PASSWORD
-              value: 123qweasd
+              #value: 123qweasd
+              valueFrom:
+                secretKeyRef:
+                  name: web-secret
+                  key: password
             - name: MYSQL_USER
-              value: itp4121admin
+              #value: itp4121admin
+              valueFrom:
+                secretKeyRef:
+                  name: web-secret
+                  key: username
           image: mysql:5.7
           name: mysql-con
           ports:
