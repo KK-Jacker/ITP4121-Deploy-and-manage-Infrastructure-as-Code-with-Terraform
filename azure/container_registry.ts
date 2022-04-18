@@ -10,6 +10,7 @@ interface ContainerRegistryConstructProps {
 export class ContainerRegistrySConstruct extends Construct {
     public readonly containerRegistry: ContainerRegistry;
     public readonly roleAssignment: Resource;
+    public readonly builddocker: Resource;
     constructor(
         scope: Construct,
         name: string,
@@ -34,6 +35,15 @@ export class ContainerRegistrySConstruct extends Construct {
             }
         );
 
+        this.builddocker = new Resource(
+            this,
+            "build docker image",
+            {
+                triggers: {},
+                dependsOn: [this.containerRegistry],
+            }
+        );
+
         this.roleAssignment = new Resource(
             this,
             "ITP4121-Project kubernetes container registry role assignment",
@@ -43,11 +53,9 @@ export class ContainerRegistrySConstruct extends Construct {
             }
         );
 
-        const dockerbuild = new Resource(this, "build docker image", {
-            triggers: {
-            },
-            dependsOn: [this.containerRegistry]
-        });
+
+
+
         const acrscope = this.containerRegistry.id;
         const serverentry = this.containerRegistry.loginServer;
         const username = this.containerRegistry.adminUsername;
@@ -61,8 +69,7 @@ export class ContainerRegistrySConstruct extends Construct {
         this.roleAssignment.addOverride(
             "provisioner.local-exec.command", `az role assignment create --assignee ${AZURE_CLIENT_ID}  --scope ${acrscope} --role acrpull`
         );
-
-        dockerbuild.addOverride(
+        this.builddocker.addOverride(
             "provisioner.local-exec.command", `sleep 30 && docker login ${serverentry} -u ${username} -p ${password} && \ 
             branch=$(git symbolic-ref --short HEAD) && hash=$(git rev-parse --short HEAD) && chmod -R +rxw ../../../pc_donation/dev && \
             docker build -t ${serverentry}/${imgname}-$branch:$hash --build-arg VAULT_URL=${VAULT_URL} --build-arg AZURE_CLIENT_ID=${AZURE_CLIENT_ID} --build-arg AZURE_TENANT_ID=${AZURE_TENANT_ID} --build-arg AZURE_CLIENT_SECRET=${AZURE_CLIENT_SECRET} ../../../pc_donation && \
