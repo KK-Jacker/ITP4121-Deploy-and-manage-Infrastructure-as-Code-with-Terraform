@@ -19,6 +19,13 @@ run belows commands:
 3. tsc
 4. ./deploy.sh
 
+
+How to import data to mysql in k8s :
+
+1. kubectl port-forward service/mysql-service 30306:3306
+2. ./insert_data_to_mysql.sh
+
 How to destroy?
 
 run this commands: cdktf destroy
+
