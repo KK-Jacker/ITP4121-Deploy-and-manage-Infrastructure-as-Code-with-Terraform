@@ -81,7 +81,6 @@ export class KubernetesClusterSConstruct extends Construct {
         });
         this.kubectl = new Resource(this, "kubectl", {
             triggers: {
-                dummy: new Date().getMilliseconds().toString()
             },
             dependsOn: [this.kubernetesCluster, get_image_var, props.keyVaultConstruct.keyVault, props.containerRegistry.builddocker],
         });
