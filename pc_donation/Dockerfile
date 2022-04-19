@@ -38,7 +38,7 @@ RUN mkdir -p /run/nginx
 RUN mkdir -p /home/pc_donation/logs
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 ENV FLASK_APP run.py
-ENV FLASK_DEBUG=1
+ENV FLASK_DEBUG=0
 
 EXPOSE 80 443 5000
 ENTRYPOINT ["./web.sh"]
