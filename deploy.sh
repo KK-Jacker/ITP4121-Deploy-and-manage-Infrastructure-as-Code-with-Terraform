@@ -8,7 +8,7 @@ export AZURE_TENANT_ID=$(cat $STACK_OUTPUT  | jq -r .ServicePrincipalTenantId.v\
 alue) && \
 export AZURE_CLIENT_SECRET=$(cat $STACK_OUTPUT  | jq -r .ServicePrincipalPasswo\
 rd.value) && \
-export IMAGE=itp4121project2dev.azurecr.io/itp4121project2-azure:1e76734
+export IMAGE=$(cat $STACK_OUTPUT  | jq -r .DockerImageName.value)
 gcloud container clusters get-credentials $(terraform output -raw kubernetes_cluster_name) --region $(terraform output -raw region)
 kubectl create secret generic web-secret --from-literal='port=3306' --from-literal='username=itp4121project' --from-literal='password=123qweASD' --from-literal='host=itp4121project2dev.mysql.database.azure.com' --from-literal='tablename=default_schema'
 kubectl create secret docker-registry azurecr-secret --namespace default --docker-username=${AZURE_CLIENT_ID} --docker-password=${AZURE_CLIENT_SECRET} --docker-server=itp4121project2dev.azurecr.io
