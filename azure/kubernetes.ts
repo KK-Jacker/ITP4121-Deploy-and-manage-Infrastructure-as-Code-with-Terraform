@@ -5,6 +5,7 @@ import {VirtualNetworkConstruct} from "./virtual_network"
 import {ContainerRegistrySConstruct} from "./container_registry"
 import {KeyVaultConstruct} from "./key_vault"
 import {Resource} from "@cdktf/provider-null";
+import {MySQLServerConstruct} from "./mysql_server"
 import {DataLocalFile} from "../.gen/providers/local/data-local-file";
 
 interface KubernetesClusterSConstructProps {
@@ -13,6 +14,7 @@ interface KubernetesClusterSConstructProps {
     azureAdConstruct: AzureAdConstruct;
     containerRegistry: ContainerRegistrySConstruct;
     keyVaultConstruct: KeyVaultConstruct;
+    mysqlServerConstruct: MySQLServerConstruct;
 }
 
 export class KubernetesClusterSConstruct extends Construct {
@@ -84,12 +86,12 @@ export class KubernetesClusterSConstruct extends Construct {
             dependsOn: [this.kubernetesCluster, get_image_var, props.keyVaultConstruct.keyVault, props.containerRegistry.builddocker],
         });
 
-        const db_user = process.env.MYSQL_SERVER_ADMIN_USERNAME! //+ "@" + process.env.PROJECT_NAME! + process.env.ENV
-        const db_pass = process.env.MYSQL_SERVER_ADMIN_PASSWORD!
-        const db_host = "mysql-service"
+        const db_user = props.mysqlServerConstruct.mysqlServer.administratorLogin + "@" + props.mysqlServerConstruct.mysqlServer.name // add + "@" + props.mysqlServerConstruct.mysqlServer.name for cloud mysql
+        const db_pass = props.mysqlServerConstruct.mysqlServer.administratorLoginPassword // same but k8s sql must use process.env.MYSQL_SERVER_ADMIN_PASSWORD
+        const db_host = props.mysqlServerConstruct.mysqlServer.fqdn  //props.mysqlServerConstruct.mysqlServer.fqdn for azure cloud mysql // mysql-service for k8s mysql
         const db_name = process.env.MYSQL_SCHEMA_NAME;
-        const image= process.env.PROJECT_NAME! + process.env.ENV + ".azurecr.io/" + process.env.PROJECT_NAME! + "-" + branch_content.content + ":" + hash_content.content ;
-        const vault_url = "https://" + process.env.PROJECT_NAME! + process.env.ENV + ".vault.azure.net/"
+        const image= props.containerRegistry.containerRegistry.loginServer + "/" + process.env.PROJECT_NAME! + "-" + branch_content.content + ":" + hash_content.content ;
+        const vault_url = props.keyVaultConstruct.keyVault.vaultUri
         const azure_client_id = props.azureAdConstruct.servicePrincipalAppId;
         const azure_client_secret = props.azureAdConstruct.servicePrincipalPassword;
         const azure_tenant_id = props.azureAdConstruct.servicePrincipalTenantId;
@@ -102,8 +104,9 @@ export class KubernetesClusterSConstruct extends Construct {
              export VAULT_URL=${vault_url} && export AZURE_CLIENT_ID=${azure_client_id} && export AZURE_CLIENT_SECRET=${azure_client_secret} && export AZURE_TENANT_ID=${azure_tenant_id} && \
              kubectl create secret generic web-secret --from-literal='IMAGE=${image}' --from-literal='port="3306"' --from-literal='username=${db_user}' --from-literal='password=${db_pass}' --from-literal='host=${db_host}' --from-literal='tablename=${db_name}' && \
              kubectl create secret docker-registry azurecr-secret --namespace default --docker-server=${azurecr_loginserver} --docker-username=${azure_client_id} --docker-password=${azure_client_secret} --
-             kubectl apply -f mysql-deployment.yaml,mysql-service.yaml && envsubst < web-deployment.yaml | kubectl apply -f - && kubectl apply -f web-service.yaml
+             envsubst < web-deployment.yaml | kubectl apply -f - && kubectl apply -f web-service.yaml
              `
+            // kubectl apply -f mysql-deployment.yaml,mysql-service.yaml for k8s mysql, if use cloud mysql just delete it
         );
     }
 }
