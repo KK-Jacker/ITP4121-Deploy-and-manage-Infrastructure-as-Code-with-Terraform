@@ -3,6 +3,9 @@ import {App, TerraformOutput, TerraformStack} from "cdktf";
 import {AzurermProvider, ResourceGroup} from "@cdktf/provider-azurerm";
 import {AzureAdConstruct} from "./azure/azure_ad";
 import {ApplicationInsightsConstruct} from "./azure/application_insight";
+import {MySQLServerConstruct} from "./azure/mysql_server";
+import {MySQLDatabaseConstruct} from "./azure/mysql_db";
+import {MySQLFirewallConstruct} from "./azure/mysql_db_firewall";
 import {BlobStorageConstruct} from "./azure/blob";
 import {ChatBotConstruct} from "./azure/chatbot";
 import {ContainerRegistrySConstruct} from "./azure/container_registry";
@@ -54,6 +57,17 @@ export class MainStack extends TerraformStack {
 
         const blobStorageConstruct = new BlobStorageConstruct(this, "Blob", {resourceGroup});
 
+        const mySQLServerConstruct = new MySQLServerConstruct(this, "MySQL server", {resourceGroup});
+
+        new MySQLDatabaseConstruct(this, "MySQL database", {
+            resourceGroup,
+            mysqlServer: mySQLServerConstruct.mysqlServer,
+        });
+
+        new MySQLFirewallConstruct(this, "MySQL firewall", {
+            resourceGroup,
+            mysqlServer: mySQLServerConstruct.mysqlServer,
+        });
 
         const virtualNetworkConstruct = new VirtualNetworkConstruct(this, "Virtual Network", {
             resourceGroup,
@@ -93,6 +107,7 @@ export class MainStack extends TerraformStack {
             azureAdConstruct: azureAdConstruct,
             containerRegistry: containerRegistrySConstruct,
             keyVaultConstruct: keyVaultConstruct,
+            mysqlServerConstruct: mySQLServerConstruct,
         });
 
         const get_k8s_exposed_ip = new Resource(this, "get kubectl exposed ip", {
@@ -156,6 +171,29 @@ export class MainStack extends TerraformStack {
             this,
             "K8s LoadBalancer IP",
             {value: k8sipcontent, sensitive: true}
+        );
+
+        new TerraformOutput(
+            this,
+            "MySQL Server Hostname",
+            {value: mySQLServerConstruct.mysqlServer.fqdn, sensitive: true}
+        );
+        new TerraformOutput(
+            this,
+            "MySQL Server Identity",
+            {value: mySQLServerConstruct.mysqlServer.identity, sensitive: true}
+        );
+
+        new TerraformOutput(
+            this,
+            "MySQL Server Username",
+            {value: mySQLServerConstruct.mysqlServer.administratorLogin, sensitive: true}
+        );
+
+        new TerraformOutput(
+            this,
+            "MySQL Server Password",
+            {value: mySQLServerConstruct.mysqlServer.administratorLoginPassword, sensitive: true}
         );
 
 
