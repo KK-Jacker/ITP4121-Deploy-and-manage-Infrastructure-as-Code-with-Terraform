@@ -195,7 +195,30 @@ export class MainStack extends TerraformStack {
             "MySQL Server Password",
             {value: mySQLServerConstruct.mysqlServer.administratorLoginPassword, sensitive: true}
         );
+        const get_image_var = new Resource(this, "get docker image name", {
+            triggers: {
+            },
+            dependsOn: [kubernetesClusterSConstruct.kubernetesCluster],
+        });
+        get_image_var.addOverride("provisioner.local-exec.command",
+            `echo -n $(git symbolic-ref --short HEAD) > branch.txt && echo -n $(git rev-parse --short HEAD) > hash.txt`
+        );
 
+        const hash_content = new DataLocalFile(this, "hash_content_main", {
+            filename: "hash.txt",
+            dependsOn: [get_image_var],
+        });
+        const branch_content = new DataLocalFile(this, "branch_content_main", {
+            filename: "branch.txt",
+            dependsOn: [get_image_var],
+        });
+        const dockerimagename = containerRegistrySConstruct.containerRegistry.loginServer + "/" + process.env.PROJECT_NAME! + "-" + branch_content.content + ":" +  hash_content.content ;
+
+        new TerraformOutput(
+            this,
+            "Docker Image Name",
+            {value: dockerimagename, sensitive: true}
+        );
 
     }
 }
