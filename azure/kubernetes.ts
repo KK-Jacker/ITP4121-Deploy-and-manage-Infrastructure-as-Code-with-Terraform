@@ -40,7 +40,7 @@ export class KubernetesClusterSConstruct extends Construct {
                 defaultNodePool: [{
                     name: "np01",
                     nodeCount: 1,
-                    vmSize: "Standard_D2s_v3",
+                    vmSize: "Standard_D4s_v3",
                     availabilityZones: ["1","2","3"],
                     enableAutoScaling: true,
                     minCount: 1,
