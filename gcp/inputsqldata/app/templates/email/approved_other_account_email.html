@@ -1,0 +1,15 @@
+{% extends "email/layouts/email.html" %}
+{% set p_style = "font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 15px;" %}
+{% block content %}
+    <p style="{{ p_style }} color: #848484;">{{ data.candidate }} would like you to endorse his/her account
+        application.</p>
+    <a href="{{ data.url }}">Click here to endorse it.</a>
+{% endblock %}
+{% block content_zh %}
+    <p style="{{ p_style }} color: #848484;">{{ data.candidate }} 希望您認可他/她的帳戶申請。</p>
+    <a href="{{ data.url }}">點擊這裡認可它.</a>
+{% endblock %}
+
+{% block footer %}
+
+{% endblock %}

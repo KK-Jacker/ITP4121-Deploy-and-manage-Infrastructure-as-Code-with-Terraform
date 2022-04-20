@@ -1,0 +1,14 @@
+{% extends "email/layouts/email_text.html" %}
+
+{% block content %}
+    Your equipment receipts application has been rejected by your admin.
+    {{ data.reason }}
+{% endblock %}
+
+{% block content_zh %}
+    您的設備收據申請已被拒絕。
+    {{ data.reason }}
+{% endblock %}
+{% block footer %}
+
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block current_app_content %}
+    <div class="category-card card-deck mb-3 text-center">
+        <div class="row">
+            {% for category in supportors %}
+                <div class="col-sm">
+                    <div class="card my-4 shadow-sm text-center hover-shadow-lg hover-translate-y-n10 h-100">
+                        <div class="card-header">
+                            <h4 class="my-0 font-weight-normal">{{ _(category.name) }}</h4>
+                        </div>
+                        <div class="card-body">
+                            <u1 class="mt-3 mb-4 h-4">{{ _(category.body) }}</u1>
+                        </div>
+                        <div class="card-body">
+                            <button type="button" onclick="location.href='{{ category.link_name }}' "
+                                    class="btn btn-lg btn-block btn-outline-primary">{{ _("Join Now") }}</button>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            {% for category in supportors_volunteer %}
+                <div class="col-sm">
+                    <div class="card my-4 shadow-sm text-center hover-shadow-lg hover-translate-y-n10 h-100">
+                        <div class="card-header">
+                            <h4 class="my-0 font-weight-normal">{{ _(category.name) }}</h4>
+                        </div>
+                        <div class="card-body">
+                            <u1 class="mt-3 mb-4 h-4">{{ _(category.body) }}</u1>
+                        </div>
+                        <div class="card-body">
+                            <button type="button" onclick="location.href='{{ category.link_name }}' "
+                                    class="btn btn-lg btn-block btn-outline-primary">{{ _("Join Now") }}</button>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

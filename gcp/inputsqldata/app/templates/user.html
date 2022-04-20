@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block current_app_content %}
+    <table class="table table-hover">
+        <tr>
+            <td width="256px">
+                <!--cloud-->
+                <img style="height: 400px" src="{{ user.user_photo }}">
+            </td>
+
+            <td>
+                <h1>{{ _("User") }}: {{ user.username }}</h1>
+                <p>{{ _("First Name") }}: {{ user.first_name }}</p>
+                <p>{{ _("Last Name") }}: {{ user.last_name }}</p>
+                <p>{{ _("Region") }}: {{ user.region.name }}</p>
+                <p>{{ _("Email") }}: {{ user.email }}</p>
+                <p>{{ _("Phone Number") }} : {{ user.phone_number }}</p>
+                {#                {% for teacher in information %}#}
+                {#                    <p>{{ _("School Name") }}: {{ teacher.school_name }}</p>#}
+                {#                    <p>{{ _("school Address") }}: {{ teacher.school_address }}</p>#}
+                {#                    <p>{{ _("School Website") }}: {{ teacher.school_website }}</p>#}
+                {#                {% endfor %}#}
+                {% if user.last_seen %}
+                    <p>{{ _("Last seen on") }}: {{ moment(user.last_seen).format("LLL") }}</p>
+                {% endif %}
+                {% if user == current_user %}
+                    <p><a href="{{ url_for(RouteConstants.MainView.EDIT_PROFILE) }}">{{ _("Edit your profile") }}</a>
+                    </p>
+                {% endif %}
+            </td>
+        </tr>
+    </table>
+{% endblock %}

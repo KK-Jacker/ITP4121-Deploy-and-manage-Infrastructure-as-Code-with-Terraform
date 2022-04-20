@@ -1,0 +1,14 @@
+{% extends "email/layouts/email.html" %}
+{% set p_style = "font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 15px;" %}
+{% block content %}
+    <p style="{{ p_style }} color: #848484;">Thank you for your registration and please confirm your email address.</p>
+    <a href="{{ data.url }}">click here to confirm your email address!</a>
+{% endblock %}
+{% block content_zh %}
+    <p style="{{ p_style }} color: #848484;">感謝您的帳戶註冊，請確認您的電子郵件地址。</p>
+    <a href="{{ data.url }}">單擊此處確認您的電子郵件地址!</a>
+{% endblock %}
+
+{% block footer %}
+
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block current_app_content %}
+    <div class="container">
+        <div class="card col-md-12">
+            <div class="card-body">
+                <h5 class="card-title">{{ _("Title") }}: {{ repair_application.title }}</h5>
+                <p class="card-text">{{ _("Description") }}: {{ repair_application.description }}</p>
+                <img style="height: 400px" src="{{ repair_application.equipment_photo }}">
+                <p class="card-text"><small
+                        class="text-muted">{{ _("Date & Time") }}: {{ repair_application.time }}</small></p>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-6">
+            <a href="{{ url_for(RouteConstants.HasStoryStudentView.REPAIR_APPLICATION_LIST) }}" class="btn btn-primary">
+                {{ _("Back") }}
+            </a>
+        </div>
+        {% if repair_application.status == RepairApplicationStatusEnum.pending %}
+            <div class="col-md-6">
+                <a href="{{ url_for(RouteConstants.HasStoryStudentView.EDIT_REPAIR_APPLICATION,repair_application_id=repair_application.id) }}"
+                   class="btn btn-primary">
+                    {{ _("Edit Your Repair Application") }}
+                </a>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "email/layouts/email_text.html" %}
+
+{% block content %}
+    Your student would like to get some free second hand equipments and technical support from us.
+    Can you create a account in iShare.support and verify your student?
+    Please open this link to confirm your student account
+    {{ data.url }}
+{% endblock %}
+
+{% block content_zh %}
+    您的學生想從我們這裡獲得免費二手設備和技術支援。您可以在 iShare.support 中創建一個帳戶並驗證您的學生嗎？
+    請打開此鏈接以確認您的學生帳戶.
+    {{ data.url }}
+{% endblock %}
+{% block footer %}
+
+{% endblock %}

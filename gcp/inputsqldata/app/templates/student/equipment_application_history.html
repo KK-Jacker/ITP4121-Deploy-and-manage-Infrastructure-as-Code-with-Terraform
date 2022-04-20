@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block current_app_content %}
+    <div class="card">
+        <div class="card-header">
+            <h1 class="card-title">{{ title }}</h1>
+        </div>
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">{{ _("Action") }}</th>
+                    <th scope="col">{{ _("Status") }}</th>
+                    <th scope="col">{{ _("Equipment Type") }}</th>
+                    <th scope="col">{{ _("Meet up time") }}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for equipment_application in equipment_applications %}
+                    <tr>
+                        <td>
+                            {% if equipment_application.status == EquipmentApplicationStatusEnum.waiting_for_teacher_approval %}
+                                <a class="btn btn-primary"
+                                   href="{{ url_for(RouteConstants.HasStoryStudentView.CANCEL_REQUESTED_EQUIPMENT_APPLICATION,
+                                       equipment_application_id=equipment_application.id) }}"
+                                   role="button">
+                                    {{ _("Cancel") }}
+                                </a>
+                            {% elif equipment_application.status ==  EquipmentApplicationStatusEnum.in_progress %}
+                                <a href="{{ url_for(RouteConstants.HasStoryStudentView.MSG_TO_DONOR, equipment_application_id=equipment_application.id) }}"
+                                   class="btn btn-primary">{{ _("Message") }}</a>
+                                <a class="btn btn-primary confirm"
+                                   href="{{ url_for(RouteConstants.HasStoryStudentView.COMPLETE_EQUIPMENT_APPLICATION, equipment_application_id=equipment_application.id) }}">
+                                    {{ _("Complete") }}</a>
+                            {% elif equipment_application.status ==  EquipmentApplicationStatusEnum.donated %}
+                                <a class="btn btn-primary" href="
+                                        {{ url_for(RouteConstants.HasStoryStudentView.THANKS_TO_DONOR_COMPLETE_EQUIPMENT_APPLICATION, equipment_application_id=equipment_application.id) }}"
+                                   role="button">{{ _("Thank You Letter") }}</a>
+                            {% elif equipment_application.status ==  EquipmentApplicationStatusEnum.completed %}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {{ equipment_application.status.name }}
+                        </td>
+                        <td>
+                            {{ equipment_application.equipment_type.name }}
+                        </td>
+                        <td>
+                            {{ equipment_application.time }}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div>
+        <ul class="nav justify-content-center">
+            <li class="nav-item">
+                <a class="nav-link"
+                   href="{{ url_for(RouteConstants.HasStoryStudentView.EQUIPMENT_APPLICATION_HISTORY, page=1) }}"> << </a>
+            </li>
+            {% if page > 1 %}
+                <li class="nav-item">
+                    <a class="nav-link"
+                       href="{{ url_for(RouteConstants.HasStoryStudentView.EQUIPMENT_APPLICATION_HISTORY, page=page - 1) }}">
+                        < </a>
+                </li>
+            {% endif %}
+            {% for i in page_list %}
+                {% if i == page %}
+                    <li class="nav-item">
+                        <a class="nav-link" style="background-color:#efefef;"
+                           href="{{ url_for(RouteConstants.HasStoryStudentView.EQUIPMENT_APPLICATION_HISTORY, page=i) }}"><u>{{ i }}</u></a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link"
+                           href="{{ url_for(RouteConstants.HasStoryStudentView.EQUIPMENT_APPLICATION_HISTORY, page=i) }}">{{ i }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+            {% if page < last_page %}
+                <li class="nav-item">
+                    <a class="nav-link"
+                       href="{{ url_for(RouteConstants.HasStoryStudentView.EQUIPMENT_APPLICATION_HISTORY, page=page + 1) }}">
+                        > </a>
+                </li>
+            {% endif %}
+            <li class="nav-item">
+                <a class="nav-link"
+                   href="{{ url_for(RouteConstants.HasStoryStudentView.EQUIPMENT_APPLICATION_HISTORY, page=last_page) }}">
+                    >> </a>
+            </li>
+        </ul>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <a href="{{ url_for(RouteConstants.StudentView.INDEX) }}" class="btn btn-primary">
+                {{ _("Back") }}
+            </a>
+        </div>
+    </div>
+{% endblock %}
+
+{% block current_app_scripts %}
+    <script>
+        $('.confirm').on('click', function () {
+            return confirm('{{ _("Are you sure?") }}');
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block current_app_content %}
+    <div class="row">
+        <div class="col-md-6">
+            {#            {% for key, value in face_match.items() %}#}
+            {#                <p>{{ key }} : {{ value }}</p>#}
+            {#            {% endfor %}#}
+            {{ wtf.quick_form(form) }}
+        </div>
+        <div class="col-md-6">
+            <a href="{{ equipment_application.equipment.receipt_photo }}" target="_blank">
+                <img style="height: 800px" src="{{ equipment_application.equipment.receipt_photo }}"></a>
+            <p>{{ equipment_application.equipment.description }}</p>
+            <img style="height: 400px" src="{{ equipment_application.equipment.equipment_photo }}">
+            <img style="height: 400px" src="{{ equipment_application.thanks_photo }}">
+            <img style="height: 400px" src="{{ equipment_application.student.id_card_photo }}">
+            <p>{{ _("Teacher Email:") }}: <a href="mailto: {{ equipment_application.student.teacher_email }}">
+                {{ equipment_application.student.teacher_email }}</a>
+            </p>
+            <img style="height: 400px" src="{{ equipment_application.donor.user_photo }}">
+        </div>
+    </div>
+{% endblock %}
+
+{% block current_app_scripts %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.radiocheckbox').click(function () {
+                $('.radiocheckbox').each(function () {
+                    $(this).prop('checked', false);
+                });
+                $(this).prop('checked', true);
+            });
+        });
+    </script>
+{% endblock %}

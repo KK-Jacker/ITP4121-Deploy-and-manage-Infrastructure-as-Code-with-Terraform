@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      imagePullSecrets:
+      - name: azurecr-secret
+      containers:
+        - env:
+            - name: AZURE_CLIENT_ID
+              value: ${AZURE_CLIENT_ID}
+            - name: AZURE_CLIENT_SECRET
+              value: ${AZURE_CLIENT_SECRET}
+            - name: AZURE_TENANT_ID
+              value: ${AZURE_TENANT_ID}
+            - name: DATABASE_HOST
+              value: mysql
+            - name: DB_HOST
+              #value: ${DB_HOST}
+              valueFrom:
+                secretKeyRef:
+                  name: web-secret
+                  key: host
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: web-secret
+                  key: tablename
+            - name: DB_PASS
+              #value: ${DB_PASS}
+              valueFrom:
+                secretKeyRef:
+                  name: web-secret
+                  key: password
+            - name: DB_USER
+              #value: ${DB_USER}
+              valueFrom:
+                secretKeyRef:
+                  name: web-secret
+                  key: username
+            - name: DB_PORT
+              value: "3306"
+                #valueFrom:
+                  #secretKeyRef:
+                    #name: web-secret
+                    #key: port
+            - name: FLASK_ENV
+              value: development
+            - name: MAIL_SERVER
+              value: smtp4dev
+            - name: NGINX_PORT
+              value: "8080"
+            - name: VAULT_URL
+              value: ${VAULT_URL}
+          image: ${IMAGE}
+          name: web
+          ports:
+            #- containerPort: 80
+            - containerPort: 443
+          resources: {}
+      restartPolicy: Always
+status: {}

@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block current_app_content %}
+    <div class="card">
+        <div class="card-header">
+            <h1 class="card-title">{{ title }}</h1>
+        </div>
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">{{ _("Photo") }}</th>
+                    <th scope="col">{{ _("Description") }}</th>
+                    <th scope="col">{{ _("Action") }}</th>
+                    <th scope="col">{{ _("Create Date") }}</th>
+                    <th scope="col">{{ _("Status") }}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for equipment in equipments %}
+                    <tr>
+                        <td>
+                            <img class="img-thumbnail" style="height: 50px" src="{{ equipment.equipment_photo }}">
+                        </td>
+                        <td>
+                            {{ equipment.description }}
+                            {% if equipment.receipt_total is not none %}
+                                <br/>
+                            {% endif %}
+                            {{ "$" ~ equipment.receipt_total if equipment.receipt_total is not none }}
+                            {% if equipment.receipt_date is not none %}
+                                <br/>
+                            {% endif %}
+                            {{ equipment.receipt_date.strftime('%Y-%m-%d') if equipment.receipt_date is not none }}
+                        </td>
+                        <td>
+                            {% if equipment.status ==  EquipmentStatusEnum.not_selected %}
+                                <a href="{{ url_for(RouteConstants.DonorView.DONATE_EQUIPMENT_MAP, equipment_id=equipment.id) }}"
+                                   class="btn btn-outline-primary">{{ _("Donate") }}</a>
+                                <a href="{{ url_for(RouteConstants.DonorView.DELETE_DONATED_EQUIPMENT, equipment_id=equipment.id) }}"
+                                   class="btn btn-outline-primary confirm">{{ _("Delete") }}</a>
+                            {% elif equipment.status ==  EquipmentStatusEnum.selected %}
+                                <a href="{{ url_for(RouteConstants.DonorView.MSG_TO_STUDENT, equipment_application_id=equipment.equipment_application.id) }}"
+                                   class="btn btn-outline-primary">{{ _("Message") }}</a>
+                                <a href="{{ url_for(RouteConstants.DonorView.CANCEL_DONATION, equipment_application_id=equipment.equipment_application.id) }}"
+                                   class="btn btn-outline-primary confirm">{{ _("Cancel") }}</a>
+                            {% elif equipment.status ==  EquipmentStatusEnum.pending %}
+
+                            {% elif equipment.status ==  EquipmentStatusEnum.completed %}
+                                {% if equipment.equipment_application.status == EquipmentApplicationStatusEnum.completed_with_receipt %}
+                                    <a href="{{ url_for(RouteConstants.DonorView.DOWNLOAD_EQUIPMENT_RECEIPTS, equipment_id=equipment.id) }}"
+                                       class="btn btn-outline-primary">{{ _("Download Receipts") }}</a>
+                                {% endif %}
+                            {% endif %}
+                        </td>
+                        <td>{{ equipment.created_at }}</td>
+                        <td>{{ _(equipment.status.name) }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div>
+        <ul class="nav justify-content-center">
+            <li class="nav-item">
+                <a class="nav-link"
+                   href="{{ url_for(RouteConstants.DonorView.EQUIPMENT_LIST, page=1) }}"> << </a>
+            </li>
+            {% if page > 1 %}
+                <li class="nav-item">
+                    <a class="nav-link"
+                       href="{{ url_for(RouteConstants.DonorView.EQUIPMENT_LIST, page=page - 1) }}">
+                        < </a>
+                </li>
+            {% endif %}
+            {% for i in page_list %}
+                {% if i == page %}
+                    <li class="nav-item">
+                        <a class="nav-link" style="background-color:#efefef;"
+                           href="{{ url_for(RouteConstants.DonorView.EQUIPMENT_LIST, page=i) }}"><u>{{ i }}</u></a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link"
+                           href="{{ url_for(RouteConstants.DonorView.EQUIPMENT_LIST, page=i) }}">{{ i }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+            {% if page < last_page %}
+                <li class="nav-item">
+                    <a class="nav-link"
+                       href="{{ url_for(RouteConstants.DonorView.EQUIPMENT_LIST, page=page + 1) }}">
+                        > </a>
+                </li>
+            {% endif %}
+            <li class="nav-item">
+                <a class="nav-link"
+                   href="{{ url_for(RouteConstants.DonorView.EQUIPMENT_LIST, page=last_page) }}">
+                    >> </a>
+            </li>
+        </ul>
+    </div>
+    <div class="row">
+        <div class="col-2">
+            <a href="{{ url_for(RouteConstants.DonorView.INDEX) }}" class="btn btn-primary">
+                {{ _("Back") }}
+            </a>
+        </div>
+    </div>
+{% endblock %}
+
+{% block current_app_scripts %}
+    <script>
+        $('.confirm').on('click', function () {
+            return confirm('{{ _("Are you sure?") }}');
+        });
+    </script>
+{% endblock %}

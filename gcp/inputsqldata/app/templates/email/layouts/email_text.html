@@ -1,0 +1,14 @@
+Dear {{ data.receiver }},
+
+{% block content %}<!-- main content area -->{% endblock %}
+
+Thank you,
+Share.Support
+
+
+至 {{ data.receiver_zh if data.receiver_zh is defined else data.receiver }}
+{% block content_zh %}<!-- main content area -->{% endblock %}
+
+謝謝,
+iShare.Support
+{% block footer %}<!-- footer content area -->{% endblock %}

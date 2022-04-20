@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block current_app_content %}
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-6">
+                    {{ wtf.quick_form(form) }}
+                </div>
+                <div class="col-6">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">{{ _("Photo") }}</th>
+                            <th scope="col">{{ _("Equipment") }}</th>
+                        </tr>
+                        </thead>
+                        {% if equipments %}
+                            <tbody>
+                            {% for equipment in equipments %}
+                                <tr>
+                                    <td>
+                                        <img class="img-thumbnail" style="height: 50px"
+                                             src="{{ equipment.equipment_photo }}">
+                                    </td>
+                                    <td>{{ equipment.equipment_type.name }}
+                                        {% if equipment.receipt_total is not none %}
+                                            <br/>
+                                        {% endif %}
+                                        {{ "$" ~ equipment.receipt_total if equipment.receipt_total is not none }}
+                                        {% if equipment.receipt_date is not none %}
+                                            <br/>
+                                        {% endif %}
+                                        {{ equipment.receipt_date.strftime('%Y-%m-%d') if equipment.receipt_date is not none }}
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-primary"
+                                           href="{{ url_for(RouteConstants.DonorView.DELETE_DONATED_EQUIPMENT, equipment_id=equipment.id) }}"
+                                           role="button">
+                                            {{ _("Delete") }}
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        {% else %}
+                            <tbody>
+                            <tr>
+                                <td colspan="2">
+                                    {{ _("No Record") }}
+                                </td>
+                            </tr>
+                            </tbody>
+                        {% endif %}
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <ul class="nav justify-content-center">
+            <li class="nav-item">
+                <a class="nav-link"
+                   href="{{ url_for(RouteConstants.DonorView.DONATE_EQUIPMENT, page=1) }}"> << </a>
+            </li>
+            {% if page > 1 %}
+                <li class="nav-item">
+                    <a class="nav-link"
+                       href="{{ url_for(RouteConstants.DonorView.DONATE_EQUIPMENT, page=page - 1) }}">
+                        < </a>
+                </li>
+            {% endif %}
+            {% for i in page_list %}
+                {% if i == page %}
+                    <li class="nav-item">
+                        <a class="nav-link" style="background-color:#efefef;"
+                           href="{{ url_for(RouteConstants.DonorView.DONATE_EQUIPMENT, page=i) }}"><u>{{ i }}</u></a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link"
+                           href="{{ url_for(RouteConstants.DonorView.DONATE_EQUIPMENT, page=i) }}">{{ i }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+            {% if page < last_page %}
+                <li class="nav-item">
+                    <a class="nav-link"
+                       href="{{ url_for(RouteConstants.DonorView.DONATE_EQUIPMENT, page=page + 1) }}">
+                        > </a>
+                </li>
+            {% endif %}
+            <li class="nav-item">
+                <a class="nav-link"
+                   href="{{ url_for(RouteConstants.DonorView.DONATE_EQUIPMENT, page=last_page) }}">
+                    >> </a>
+            </li>
+        </ul>
+    </div>
+    <div class="row">
+        <div class="col-lg-6">
+            <a href="{{ url_for(RouteConstants.DonorView.INDEX) }}" class="btn btn-primary">
+                {{ _("Back") }}
+            </a>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block current_app_scripts %}
+    <script type="text/javascript"
+            src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("form").submit(function () {
+                $.LoadingOverlay("show");
+            });
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block current_app_styles %}
+    <style>
+        div.scrollmenu {
+            overflow: auto;
+            white-space: nowrap;
+        }
+    </style>
+{% endblock %}
+
+{% block current_app_content %}
+
+    <div class="row scrollmenu">
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">{{ _("Action") }}</th>
+                <th scope="col">{{ _("Status") }}</th>
+                <th scope="col">{{ _("First Name") }}</th>
+                <th scope="col">{{ _("Last Name") }}</th>
+                <th scope="col">{{ _("Email") }}</th>
+                <th scope="col">{{ _("School") }}</th>
+                <th scope="col">{{ _("Office") }}</th>
+            </tr>
+            </thead>
+            {% for teacher in teachers %}
+                <tbody>
+                <tr>
+                    {% if teacher.status == TeacherStatusEnum.activated or teacher.status == TeacherStatusEnum.teacher_not_activated_and_admin_approved %}
+                        <td>
+
+                        </td>
+                    {% else %}
+                        <td>
+                            <a href= {{ url_for(RouteConstants.AdminView.APPROVE_TEACHER, teacher_id= teacher.id ) }}>{{ _("Approve") }}</a>
+                        </td>
+                    {% endif %}
+                    <td>{{ teacher.status.name }}</td>
+                    <td>{{ teacher.first_name }}</td>
+                    <td>{{ teacher.last_name }}</td>
+                    <td><a href="mailto: {{ teacher.email }}">{{ teacher.email }}</a></td>
+                    <td><a href="{{ teacher.school.url }}" target="_blank">{{ teacher.school.name_en }}</a></td>
+                    <td>{{ teacher.office_phone_number }}</td>
+                </tr>
+                </tbody>
+            {% endfor %}
+
+        </table>
+    </div>
+    <div>
+        <ul class="nav justify-content-center">
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for(RouteConstants.AdminView.TEACHER_LIST, page=1) }}"> << </a>
+            </li>
+            {% if page > 1 %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for(RouteConstants.AdminView.TEACHER_LIST, page=page - 1) }}"> < </a>
+                </li>
+            {% endif %}
+            {% for i in page_list %}
+                {% if i == page %}
+                    <li class="nav-item">
+                        <a class="nav-link" style="background-color:#efefef;" href="{{ url_for(RouteConstants.AdminView.TEACHER_LIST, page=i) }}"><u>{{ i }}</u></a>
+                    </li>
+                    {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for(RouteConstants.AdminView.TEACHER_LIST, page=i) }}">{{ i }}</a>
+                </li>
+                {% endif %}
+            {% endfor %}
+            {% if page < last_page %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for(RouteConstants.AdminView.TEACHER_LIST, page=page + 1) }}"> > </a>
+                </li>
+            {% endif %}
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for(RouteConstants.AdminView.TEACHER_LIST, page=last_page) }}"> >> </a>
+            </li>
+        </ul>
+    </div>
+    <div class="row">
+        <a href="{{ url_for(RouteConstants.AdminView.INDEX) }}" class="btn btn-primary">
+            {{ _("Back") }}
+        </a>
+    </div>
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block current_app_content %}
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title mb-0">{{ _("Register") }}</h2>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-8 card-text">
+                        {{ wtf.quick_form(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block current_app_scripts %}
+    <script type="text/javascript"
+            src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("form").submit(function () {
+                $.LoadingOverlay("show");
+            });
+        });
+    </script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+    <script>
+        //https://getdatepicker.com/4/Options/
+        $(document).ready(function () {
+            let today = new Date();
+            let minDate = new Date();
+            let maxDate = new Date();
+            minDate.setDate(today.getDate() + 3);
+            maxDate.setDate(today.getDate() + 14);
+            $("#date_of_birth").datetimepicker({
+                format: "DD/MM/YYYY HH:mm a",
+                locale: "en",
+                inline: true,
+                sideBySide: true,
+                minDate: minDate,
+                maxDate: maxDate,
+                disabledHours: [0, 1, 2, 3, 4, 5, 6, 7, 8, 21, 22, 23, 24],
+                icons: {
+                    time: "fa fa-clock-o",
+                    date: "fa fa-calendar",
+                    up: "fa fa-arrow-up",
+                    down: "fa fa-arrow-down",
+                    previous: "fa fa-chevron-left",
+                    next: "fa fa-chevron-right",
+                    today: "fa fa-clock-o",
+                    clear: "fa fa-trash-o"
+                }
+            });
+        })
+    </script>
+{% endblock %}

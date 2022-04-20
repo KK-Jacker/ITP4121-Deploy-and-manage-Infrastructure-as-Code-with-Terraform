@@ -1,0 +1,14 @@
+{% extends "email/layouts/email_text.html" %}
+
+{% block content %}
+    Your equipment receipts application has been rejected by your admin.
+    Please open this link {{ data.url }} to download it.
+{% endblock %}
+
+{% block content_zh %}
+    您的設備收據應用是在這裡
+    下載請打開此鏈接 {{ data.url }}
+{% endblock %}
+{% block footer %}
+
+{% endblock %}

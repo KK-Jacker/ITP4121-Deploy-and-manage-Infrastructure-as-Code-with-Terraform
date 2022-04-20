@@ -1,0 +1,14 @@
+{% extends "email/layouts/email_text.html" %}
+
+{% block content %}
+    {{ data.candidate }} would like you to endorse his/her account application.
+    Please open this link {{ data.url }}
+{% endblock %}
+
+{% block content_zh %}
+    {{ data.candidate }} 希望您認可他/她的帳戶申請。
+    請打開此鏈接 {{ data.url }}
+{% endblock %}
+{% block footer %}
+
+{% endblock %}

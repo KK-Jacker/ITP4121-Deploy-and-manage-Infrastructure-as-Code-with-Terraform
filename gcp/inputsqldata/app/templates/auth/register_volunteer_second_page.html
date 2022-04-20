@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block current_app_content %}
+    <h1>{{ _("Volunteer") }}</h1>
+    <form action="{{ action }}" method="post">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            <label class="form-control-label">{{ _("School Address") }}</label>
+            <div id="google_map" class="z-depth-1-half map-container center-block col-md-12" style="height: 600px">
+                <iframe src="https://maps.google.com/maps" frameborder="0" style="border:0" allowfullscreen></iframe>
+            </div>
+        </div>
+
+        <button class="btn btn-primary" type="submit" name="submit" id="submit">{{ _("Submit") }}
+        </button>
+    </form>
+{% endblock %}
+
+{% block current_app_scripts %}
+    <script type="text/javascript" src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <script type="text/javascript"
+            src="https://maps.googleapis.com/maps/api/js?key={{ google_map_key }}&callback=mapCallback&libraries=&v=weekly"
+            defer></script>
+    <script type="text/javascript" src="{{ url_for(RouteConstants.STATIC, filename="js/map.js") }}"></script>
+    <script type="text/javascript">
+        function mapCallback() {
+            function homeMarkerPinned(point) {
+                console.log(point);
+                $("#latitude").val(point.latitude);
+                $("#longitude").val(point.longitude);
+            }
+
+            singlePinMap(homeMarkerPinned);
+        }
+
+        $(document).ready(function () {
+            $("#submit").click(function () {
+                if ($("#latitude").val() === "" || $("#longitude").val() === "") {
+                    alert("{{ _("Please pin a point in the home map!") }}");
+                    return false;
+                }
+            });
+        });
+    </script>
+{% endblock %}
