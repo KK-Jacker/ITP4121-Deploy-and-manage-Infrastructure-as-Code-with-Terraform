@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block current_app_content %}
+
+    {% if lang == 'zh_Hant' %}
+    {% 
+        set categories_teacher = [
+            {
+                "link_name": url_for(RouteConstants.TeacherView.TEACHER_APPROVED_STUDENT_LIST),
+                "name": "學生註冊記錄",
+                "body": "在此處批准您的學生帳戶申請。"
+            },
+            {
+                "link_name": url_for(RouteConstants.TeacherView.EQUIPMENT_APPLICATION_LIST),
+                "name": "學生物品申請記錄",
+                "body": "在此處批准您學生的設備申請。"
+            }
+        ] 
+    %}
+    {% else %}
+    {%
+        set categories_teacher = [
+            {
+                "link_name": url_for(RouteConstants.TeacherView.TEACHER_APPROVED_STUDENT_LIST),
+                "name": "Student Account Record",
+                "body": "Approve your student account application here."
+            },
+            {
+                "link_name": url_for(RouteConstants.TeacherView.EQUIPMENT_APPLICATION_LIST),
+                "name": "Student Equipment Application Record",
+                "body": "Approve your student's equipment application here."
+            }
+        ] 
+    %}
+    {% endif %}
+
+    <div class="category-card card-deck mb-3 text-center">
+    <div class="row">
+        {% for category in categories_teacher %}
+            <div class="col-sm d-inline-flex">
+                <div class="card my-4 shadow-sm ">
+                    <div class="card-header">
+                        <h4 class="my-0 font-weight-normal">{{ category.name }}</h4>
+                    </div>
+                    <div class="card-body">
+                        <u1 class="mt-3 mb-4 h-4">{{ category.body }}</u1>
+                    </div>
+                    <div class="card-body">
+                        <button type="button" onclick="location.href='{{ category.link_name }}' "
+                                class="btn btn-lg btn-block btn-outline-primary">
+                            {{ _("Enter") }}</button>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+     </div>
+    <iframe src="https://webchat.botframework.com/embed/ishare-Web-bot?s={{ key }}"
+            style="min-width: 400px; width: 100%; min-height: 500px;"></iframe>
+{% endblock %}

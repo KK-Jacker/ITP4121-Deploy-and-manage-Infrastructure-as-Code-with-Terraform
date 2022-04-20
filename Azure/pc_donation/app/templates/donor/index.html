@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block current_app_content %}
+
+    {% if lang == 'zh_Hant' %}
+    {% 
+        set categorys = [
+            {
+                "link_name": RouteConstants.DonorView.DONATE_EQUIPMENT,
+                "name": "捐贈物品",
+                "body": "捐贈你現有的物品",
+                "act": "進入"
+            },
+            {
+                "link_name": RouteConstants.DonorView.EQUIPMENT_LIST,
+                "name": "捐贈管理",
+                "body": "選擇您的設備並在這裡捐贈給學生。",
+                "act": "進入"
+            }
+        ] 
+    %}
+    {% else %}
+    {%
+        set categorys = [
+            {
+                "link_name": RouteConstants.DonorView.DONATE_EQUIPMENT,
+                "name": "Share your unused equipment",
+                "body": "Upload a photo, tell us the type and write a remark.",
+                "act": "Enter"
+            },
+            {
+                "link_name": RouteConstants.DonorView.EQUIPMENT_LIST,
+                "name": "Manage Donation",
+                "body": "Select your equipment and donate to student here.",
+                "act": "Enter"
+            }
+        ] 
+    %}
+    {% endif %}
+
+    <div class="row justify-content-center text-center">
+        {% for category in categorys %}
+            <div class="col-lg-4 col-sm-6">
+                <div class="card my-4 shadow-sm hover-shadow-lg hover-translate-y-n10">
+                    <div class="card-header">
+                        <h4 class="my-0 font-weight-normal">{{ _(category.name) }}</h4>
+                    </div>
+                    <div class="card-body">
+                        <u1 class="mt-6 mb-4 h-4">{{ _(category.body) }}</u1>
+                    </div>
+                    <div class="card-body">
+                        <button type="button" onclick="location.href='{{ url_for(category.link_name) }}' "
+                                class="btn btn-md btn-block btn-outline-primary  mt-3">{{ _(category.act) }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <iframe src="https://webchat.botframework.com/embed/ishare-Web-bot?s={{ key }}"
+            style="min-width: 400px; width: 100%; min-height: 500px;"></iframe>
+{% endblock %}

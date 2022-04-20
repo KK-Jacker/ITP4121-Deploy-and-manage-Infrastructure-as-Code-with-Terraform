@@ -1,0 +1,16 @@
+{
+  "language": "typescript",
+  "app": "npm run --silent compile && node main.js",
+  "terraformProviders": [
+    "azurerm@~> 2.70.0",
+    "azuread@~> 2.6.0",
+    "null@~> 3.1.0",
+    "local@~> 2.1.0"
+  ],
+  "terraformModules": [],
+  "context": {
+    "env": "dev",
+    "excludeStackIdFromLogicalIds": "true",
+    "allowSepCharsInLogicalIds": "true"
+  }
+}

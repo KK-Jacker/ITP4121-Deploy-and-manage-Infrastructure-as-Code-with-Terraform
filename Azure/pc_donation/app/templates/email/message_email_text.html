@@ -1,0 +1,16 @@
+{% extends "email/layouts/email_text.html" %}
+
+{% block content %}
+    Message from {{ data.from }}:
+    {{ data.message }}
+    Please open this link to reply message {{ data.url }}
+{% endblock %}
+
+{% block content_zh %}
+    信息來自 {{ data.from }}:
+    {{ data.message }}
+    回復請打開此鏈接 {{ data.url }}
+{% endblock %}
+{% block footer %}
+
+{% endblock %}

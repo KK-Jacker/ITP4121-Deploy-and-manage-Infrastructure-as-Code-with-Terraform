@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block current_app_content %}
+    <div class="row">
+        {% if story_id %}
+            <div class="col-md-6">
+                {{ wtf.quick_form(form) }}
+            </div>
+            <div class="col-md-6 text-center my-auto">
+                <img class="img-thumbnail" style="height: 200px" src="{{ story.story_photo }}">
+            </div>
+        {% else %}
+            <div class="col-md-12">
+                {{ wtf.quick_form(form) }}
+            </div>
+        {% endif %}
+    </div>
+    <br>
+    <div class="row">
+        {% if title == "Edit Story" %}
+            <div class="col-md-4">
+                <a href="{{ url_for(RouteConstants.StudentView.INDEX) }}" class="btn btn-primary">
+                    {{ _("Back") }}
+                </a>
+            </div>
+            <div class="col-md-4 offset-md-4">
+                <a href="{{ url_for(RouteConstants.HasStoryStudentView.CREATE_EQUIPMENT_APPLICATION) }}" class="btn btn-primary">
+                    {{ _("Apply Equipment") }}
+                </a>
+            </div>
+        {% elif story_id %}
+            <div class="col-md-4">
+                <a href="{{ url_for(RouteConstants.StudentView.INDEX) }}" class="btn btn-primary">
+                    {{ _("Back") }}
+                </a>
+            </div>
+            <div class="col-md-4">
+                <a href="{{ url_for(RouteConstants.StudentView.EDIT_STORY, story_id=story_id) }}" class="btn btn-primary">
+                    {{ _("Edit Story") }}
+                </a>
+            </div>
+            <div class="col-md-4">
+                <a href="{{ url_for(RouteConstants.HasStoryStudentView.CREATE_EQUIPMENT_APPLICATION) }}" class="btn btn-primary">
+                    {{ _("Apply Equipment") }}
+                </a>
+            </div>
+        {% else %}
+            <div class="col-md-2">
+                <a href="{{ url_for(RouteConstants.StudentView.INDEX) }}" class="btn btn-primary">
+                    {{ _("Back") }}
+                </a>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

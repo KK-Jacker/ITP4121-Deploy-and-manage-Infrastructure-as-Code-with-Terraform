@@ -1,0 +1,14 @@
+{% extends "email/layouts/email.html" %}
+{% set p_style = "font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 15px;" %}
+{% block content %}
+    <p style="{{ p_style }} color: #848484;">Your equipment receipts application has been rejected by your admin.</p>
+    <p style="{{ p_style }} color: #848484;">{{ data.reason }}</p>
+{% endblock %}
+{% block content_zh %}
+    <p style="{{ p_style }} color: #848484;">您的設備收據申請已被拒絕。</p>
+    <p style="{{ p_style }} color: #848484;">{{ data.reason }}</p>
+{% endblock %}
+
+{% block footer %}
+
+{% endblock %}

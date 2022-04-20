@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block current_app_content %}
+
+    {% if lang == 'zh_Hant' %}
+    {% 
+        set categorys_volunteer = [
+            {
+                'link_name': url_for(RouteConstants.VolunteerView.VOLUNTEER_RECORD),
+                'name': '你的維修記錄',
+                'body': '',
+                'act': "進入"
+            },
+            {
+                'link_name': url_for(RouteConstants.VolunteerView.VOLUNTEER_REPAIR_ITEM_CASE),
+                'name': '選擇學生維修申請',
+                'body': '',
+                'act': "進入"
+            }
+        ] 
+    %}
+    {% else %}
+    {%
+        set categorys_volunteer = [
+            {
+                'link_name': url_for(RouteConstants.VolunteerView.VOLUNTEER_RECORD),
+                'name': 'Volunteer Job Record',
+                'body': 'Follow up your support case here.',
+                'act': "Enter"
+            },
+            {
+                'link_name': url_for(RouteConstants.VolunteerView.VOLUNTEER_REPAIR_ITEM_CASE),
+                'name': 'Help a student',
+                'body': 'Select a support case around you.',
+                'act': "Enter"
+            }
+        ]
+    %}
+    {% endif %}
+
+
+    <div class="category-card card-deck mb-3 text-center">
+        <div class="row">
+            {% for category in categorys_volunteer_googlemap %}
+                <div class="col-sm-auto d-inline-flex">
+                    <div class="card my-4 shadow-sm ">
+                        <div class="card-header">
+                            <h4 class="my-0 font-weight-normal">{{ category.name }}</h4>
+                        </div>
+                        <div class="card-body">
+                            <u1 class="mt-3 mb-4 h-4">{{ category.body }}</u1>
+                        </div>
+                        <div class="card-body">
+                            <button type="button" onclick="location.href='{{ category.link_name }}' "
+                                    class="btn btn-lg btn-block btn-outline-primary">{{ _(category.act) }}</button>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            {% for category in categorys_volunteer %}
+                <div class="col-sm d-inline-flex">
+                    <div class="card my-4 shadow-sm ">
+                        <div class="card-header">
+                            <h4 class="my-0 font-weight-normal">{{ category.name }}</h4>
+                        </div>
+                        <div class="card-body">
+                            <u1 class="mt-3 mb-4 h-4">{{ category.body }}</u1>
+                        </div>
+                        <div class="card-body">
+                            <button type="button" onclick="location.href='{{ category.link_name }}' "
+                                    class="btn btn-lg btn-block btn-outline-primary">{{ _(category.act) }}</button>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <iframe src="https://webchat.botframework.com/embed/ishare-Web-bot?s={{ key }}"
+            style="min-width: 400px; width: 100%; min-height: 500px;"></iframe>
+
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block current_app_content %}
+    <div class="container">
+        <div class="row">
+            {#    <h1>{{ _("Repair Case")}}</h1>#}
+        </div>
+        <div class="row">
+            <div class="col-8">
+                <div id="google_map" class="z-depth-1-half map-container center-block col-md-12" style="height: 800px">
+                    <iframe src="https://maps.google.com/maps" frameborder="0" style="border:0"
+                            allowfullscreen></iframe>
+                </div>
+            </div>
+            <div class="col-4">
+                <div id="map_table" style="height: 800px; overflow-y: scroll"></div>
+            </div>
+        </div>
+        <div class="row">
+            <a href="{{ url_for(RouteConstants.VolunteerView.INDEX) }}" class="btn btn-primary">
+                {{ _("Back") }}
+            </a>
+        </div>
+    </div>
+{% endblock %}
+
+{% block current_app_scripts %}
+    <script type="text/javascript" src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <script type="text/javascript"
+            src="https://maps.googleapis.com/maps/api/js?key={{ google_map_key }}&callback=mapCallback&libraries=&v=weekly"
+            defer></script>
+    <script type="text/javascript" src="{{ url_for(RouteConstants.STATIC, filename="js/markerclusterer.js") }}"></script>
+    <script type="text/javascript" src="{{ url_for(RouteConstants.STATIC, filename="js/map.js") }}"></script>
+    <script type="text/javascript">
+        let radioValue = "en";
+
+        function mapCallback() {
+            volunteerMap(() => ({"language": "{{ get_locale() }}"}));
+        }
+
+    </script>
+{% endblock %}

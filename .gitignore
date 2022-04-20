@@ -1,10 +1,11 @@
-Azure/.gen/*
-Azure/cdktf.out/*
+**/.gen/*
+**/cdktf.out/*
+**/venv/*
 **/node_modules/*
 **/.terraform/*
 *.tfstate
 *.tfstate.*
-crash.log
+*.log
 *.tfvars
 override.tf
 override.tf.json

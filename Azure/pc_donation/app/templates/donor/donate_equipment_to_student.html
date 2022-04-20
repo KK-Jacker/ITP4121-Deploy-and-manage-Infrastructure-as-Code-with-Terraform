@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block current_app_content %}
+    <div class="row">
+        <div class="col-6">
+            <div class="card mb-3">
+                <img src="{{ equipment_application.student.story.story_photo }}" class="card-img-top"
+                     alt="{{ equipment.description }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ equipment_application.student.story.title }}</h5>
+                    <p class="card-text">{{ equipment_application.student.story.content }}</p>
+                    <p class="card-text"><small
+                            class="text-muted">
+                        {{ _("Create at:") }}{{ moment(equipment_application.created_at).format("LLL") }}</small></p>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-6">
+            <h4>{{ _("Prefered transfer location") }}</h4>
+            <p>{{ equipment_application.address }}</p>
+            <div id="google_map" class="z-depth-1-half map-container center-block col-md-12"
+                 data-lat="{{ equipment_application.latitude }}"
+                 data-lng="{{ equipment_application.longitude }}"
+                 style="height: 300px">
+                <iframe src="https://maps.google.com/maps" frameborder="0" style="border:0"
+                        allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-6">
+            {{ wtf.quick_form(form) }}
+        </div>
+    </div>
+{% endblock %}
+
+{% block current_app_styles %}
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.css">
+{% endblock %}
+
+{% block current_app_scripts %}
+    <script type="text/javascript" src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <script type="text/javascript"
+            src="https://maps.googleapis.com/maps/api/js?key={{ google_map_key }}&callback=readonlyMap&libraries=&v=weekly"
+            defer></script>
+    <script type="text/javascript"
+            src="{{ url_for(RouteConstants.STATIC, filename="js/markerclusterer.js") }}"></script>
+    <script type="text/javascript" src="{{ url_for(RouteConstants.STATIC, filename="js/map.js") }}"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+    <script>
+        //https://getdatepicker.com/4/Options/
+        $(document).ready(function () {
+            let today = new Date();
+            let minDate = new Date();
+            let maxDate = new Date();
+            minDate.setDate(today.getDate() + 3);
+            maxDate.setDate(today.getDate() + 14);
+            $("#date_time").datetimepicker({
+                format: "DD/MM/YYYY HH:mm a",
+                locale: "en",
+                inline: true,
+                sideBySide: true,
+                minDate: minDate,
+                maxDate: maxDate,
+                disabledHours: [0, 1, 2, 3, 4, 5, 6, 7, 8, 21, 22, 23, 24],
+                icons: {
+                    time: "fa fa-clock-o",
+                    date: "fa fa-calendar",
+                    up: "fa fa-arrow-up",
+                    down: "fa fa-arrow-down",
+                    previous: "fa fa-chevron-left",
+                    next: "fa fa-chevron-right",
+                    today: "fa fa-clock-o",
+                    clear: "fa fa-trash-o"
+                }
+            });
+        })
+    </script>
+
+
+{% endblock %}

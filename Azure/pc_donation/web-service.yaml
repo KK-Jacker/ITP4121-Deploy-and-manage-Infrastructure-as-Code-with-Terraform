@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: web
+  name: web-service
+spec:
+  type: LoadBalancer
+  ports:
+    - name: "80"
+      port: 80
+      protocol: TCP
+      targetPort: 80
+    - name: "443"
+      port: 443
+      protocol: TCP
+      targetPort: 443
+  selector:
+    app: web

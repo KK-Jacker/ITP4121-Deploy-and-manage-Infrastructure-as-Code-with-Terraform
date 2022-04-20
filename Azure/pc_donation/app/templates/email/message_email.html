@@ -1,0 +1,16 @@
+{% extends "email/layouts/email.html" %}
+{% set p_style = "font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 15px;" %}
+{% block content %}
+    <p style="{{ p_style }} color: #848484;">Message from {{ data.from }}:</p>
+    <p style="{{ p_style }} color: #848484;">{{ data.message }}</p>
+    <a href="{{ data.url }}">Click here to reply.</a>
+{% endblock %}
+{% block content_zh %}
+    <p style="{{ p_style }} color: #848484;">信息來自 {{ data.from }}:</p>
+    <p style="{{ p_style }} color: #848484;">{{ data.message }}</p>
+    <a href="{{ data.url }}">點擊這裡回復。</a>
+{% endblock %}
+
+{% block footer %}
+
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block current_app_content %}
+    <div class="card">
+        <div class="card-header">
+            <h1 class="card-title">{{ title }}</h1>
+        </div>
+        <form action="{{ action }}" enctype="multipart/form-data" method="post"
+              class=" form">
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+                {{ wtf.form_field(form.title, class="form-control") }}
+                {{ wtf.form_field(form.description, class="form-control") }}
+                {{ wtf.form_field(form.address, class="form-control") }}
+                <label class="form-control-label">{{ _("Pin your address") }}</label>
+                <div id="google_map" class="z-depth-l1-half map-container center-block col-md-12" style="height: 400px">
+                    <iframe src="https://maps.google.com/maps" frameborder="0" style="border:0"
+                            allowfullscreen></iframe>
+                </div>
+                {{ wtf.form_field(form.equipment_photo, placeholde="{{ _('Please upload the broken item photo') }}") }}
+                <a href="{{ url_for(RouteConstants.StudentView.INDEX) }}" class="btn btn-primary">
+                    {{ _("Back") }}
+                </a>
+                <button class="btn btn-primary" type="submit" name="submit" id="submit">{{ _("Submit") }}
+                </button>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block current_app_scripts %}
+    <script type="text/javascript" src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <script type="text/javascript"
+            src="https://maps.googleapis.com/maps/api/js?key={{ google_map_key }}&callback=mapCallback&libraries=&v=weekly"
+            defer></script>
+    <script type="text/javascript" src="{{ url_for(RouteConstants.STATIC, filename="js/map.js") }}"></script>
+    <script type="text/javascript">
+        function mapCallback() {
+            function markerPinned(point) {
+                console.log(point);
+                $("#latitude").val(point.latitude);
+                $("#longitude").val(point.longitude);
+            }
+            singlePinMap(markerPinned);
+        }
+
+        $(document).ready(function () {
+            $("#submit").click(function () {
+                if ($("#latitude").val() === "" || $("#longitude").val() === "") {
+                    alert("{{ _("Please pin a point in the home map!") }}");
+                    return false;
+                }
+            });
+        });
+    </script>
+{% endblock %}

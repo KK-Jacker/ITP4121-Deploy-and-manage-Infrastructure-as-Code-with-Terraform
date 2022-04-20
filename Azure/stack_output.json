@@ -1,0 +1,107 @@
+{
+  "ContainerRegistryAdminPassword": {
+    "sensitive": true,
+    "type": "string",
+    "value": "xVdNyt2nuNpb9/gPmUr2e9uBdoakk8H6"
+  },
+  "ContainerRegistryAdminUsername": {
+    "sensitive": true,
+    "type": "string",
+    "value": "itp4121project2dev"
+  },
+  "ContainerRegistryIdentity": {
+    "sensitive": true,
+    "type": [
+      "list",
+      [
+        "object",
+        {
+          "identity_ids": [
+            "set",
+            "string"
+          ],
+          "principal_id": "string",
+          "tenant_id": "string",
+          "type": "string"
+        }
+      ]
+    ],
+    "value": []
+  },
+  "DockerImageName": {
+    "sensitive": true,
+    "type": "string",
+    "value": "itp4121project2dev.azurecr.io/itp4121project2-main:973c13f"
+  },
+  "K8sLoadBalancerIP": {
+    "sensitive": true,
+    "type": "string",
+    "value": ""
+  },
+  "KeyVaultUri": {
+    "sensitive": true,
+    "type": "string",
+    "value": "https://itp4121project2dev.vault.azure.net/"
+  },
+  "MySQLServerHostname": {
+    "sensitive": true,
+    "type": "string",
+    "value": "itp4121project2dev.mysql.database.azure.com"
+  },
+  "MySQLServerIdentity": {
+    "sensitive": true,
+    "type": [
+      "list",
+      [
+        "object",
+        {
+          "principal_id": "string",
+          "tenant_id": "string",
+          "type": "string"
+        }
+      ]
+    ],
+    "value": [
+      {
+        "principal_id": "cf5b46e5-318b-4e8c-84c6-b9d1bfdc535b",
+        "tenant_id": "60c86ecb-0dc3-4e40-8ef2-a9f29094215b",
+        "type": "SystemAssigned"
+      }
+    ]
+  },
+  "MySQLServerPassword": {
+    "sensitive": true,
+    "type": "string",
+    "value": "123qweASD"
+  },
+  "MySQLServerUsername": {
+    "sensitive": true,
+    "type": "string",
+    "value": "itp4121project"
+  },
+  "ServicePrincipalAppId": {
+    "sensitive": true,
+    "type": "string",
+    "value": "01186fd8-aa09-4d0b-b0bc-3e6d20175c31"
+  },
+  "ServicePrincipalPassword": {
+    "sensitive": true,
+    "type": "string",
+    "value": "s6A8Q~E4Yk7RtF7X3.iAKKLsCYZis0iuU5YSmcKw"
+  },
+  "ServicePrincipalTenantId": {
+    "sensitive": true,
+    "type": "string",
+    "value": "60c86ecb-0dc3-4e40-8ef2-a9f29094215b"
+  },
+  "kubernetesclustername": {
+    "sensitive": true,
+    "type": "string",
+    "value": "itp4121project2dev"
+  },
+  "resourcegroupname": {
+    "sensitive": true,
+    "type": "string",
+    "value": "itp4121project2dev"
+  }
+}

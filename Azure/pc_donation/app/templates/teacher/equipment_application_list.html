@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block current_app_content %}
+
+    <div class="row">
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">{{ _("Action") }}</th>
+                <th scope="col">{{ _("Status") }}</th>
+                <th scope="col">{{ _("First Name") }}</th>
+                <th scope="col">{{ _("Last Name") }}</th>
+                <th scope="col">{{ _("Equipment") }}</th>
+                <th scope="col">{{ _("Student Email") }}</th>
+            </tr>
+            </thead>
+            {% for equipmentApplication in records %}
+                <tbody>
+                <tr>
+                    <td>
+                        {% if equipmentApplication.status == EquipmentApplicationStatusEnum.waiting_for_teacher_approval %}
+                            <a href="{{ url_for(RouteConstants.TeacherView.APPROVE_EQUIPMENT_APPLICATION, equipment_application_id = equipmentApplication.id ) }}"
+                               class="btn btn-primary">Approve</a>
+                            <a href="{{ url_for(RouteConstants.TeacherView.REJECT_EQUIPMENT_APPLICATION, equipment_application_id = equipmentApplication.id ) }}"
+                               class="btn btn-primary confirm">Reject</a>
+                        {% else %}
+
+                        {% endif %}
+                    </td>
+                    <td>  {{ _(equipmentApplication.status.name) }}</td>
+                    <td>{{ equipmentApplication.student.first_name }}</td>
+                    <td>{{ equipmentApplication.student.last_name }}</td>
+                    <td>{{ equipmentApplication.equipment_type.name }}</td>
+                    <td>
+                        <a href="mailto: {{ equipmentApplication.student.email }}">{{ equipmentApplication.student.email }}</a>
+                    </td>
+                </tr>
+                </tbody>
+            {% endfor %}
+            <div>
+                {% if record %}
+                {% else %}
+                    {{ _("No Record") }}
+                {% endif %}
+            </div>
+        </table>
+        <div class="col-md-2">
+            <a href="{{ url_for(RouteConstants.TeacherView.INDEX) }}" class="btn btn-primary">
+                {{ _("Back") }}
+            </a>
+        </div>
+    </div>
+{% endblock %}
+{% block current_app_scripts %}
+    <script>
+        $('.confirm').on('click', function () {
+            return confirm('{{ _("Are you sure?") }}');
+        });
+    </script>
+{% endblock %}

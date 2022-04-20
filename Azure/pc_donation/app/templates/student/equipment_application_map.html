@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block current_app_styles %}
+    <link type="text/css" rel="stylesheet" href="{{ url_for(RouteConstants.STATIC, filename='css/map.css') }}">
+{% endblock %}
+
+{% block current_app_content %}
+    <div class="row">
+        <h1>{{ _("Pin your prefered location to get your equipment.") }}</h1>
+    </div>
+    <div class="row">
+        <div id="google_map" class="z-depth-1-half map-container center-block col-md-12" style="height: 700px">
+            <iframe src="https://maps.google.com/maps" frameborder="0" style="border:0" allowfullscreen></iframe>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <a href="{{ url_for(RouteConstants.HasStoryStudentView.CREATE_EQUIPMENT_APPLICATION) }}"
+               class="btn btn-primary">
+                {{ _("Back") }}
+            </a>
+        </div>
+        <div class="col-md-6">
+            <form action="{{ action }}" method="post">
+                {{ form.hidden_tag() }}
+                <button class="btn btn-primary" type="submit" name="submit" id="submit">{{ _("Submit") }}
+                </button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block current_app_scripts %}
+    <script type="text/javascript" src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <script type="text/javascript"
+            src="https://maps.googleapis.com/maps/api/js?key={{ google_map_key }}&callback=mapCallback&libraries=&v=weekly"
+            defer></script>
+    <script type="text/javascript" src="{{ url_for(RouteConstants.STATIC, filename='js/map.js') }}"></script>
+    <script type="text/javascript">
+        function mapCallback() {
+            function markerPinned(point) {
+                console.log(point);
+                $("#latitude").val(point.latitude);
+                $("#longitude").val(point.longitude);
+            }
+
+            singlePinMap(markerPinned);
+        }
+
+        $(document).ready(function () {
+            $("#submit").click(function () {
+                if ($("#latitude").val() === "" || $("#longitude").val() === "") {
+                    alert("{{ _("Please pin a point in the home map!") }}");
+                    return false;
+                }
+            });
+        });
+    </script>
+{% endblock %}
