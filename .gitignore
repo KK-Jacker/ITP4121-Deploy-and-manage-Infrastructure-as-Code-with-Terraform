@@ -1,5 +1,5 @@
-**/.gen/*
-**/cdktf.out/*
+Azure/.gen/*
+Azure/cdktf.out/*
 **/node_modules/*
 **/.terraform/*
 *.tfstate
