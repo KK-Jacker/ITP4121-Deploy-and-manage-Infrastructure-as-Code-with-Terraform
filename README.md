@@ -18,7 +18,6 @@ Before Deploy:
 
 Please upload your domain private key and CA certificate to /Azure/pc_donation/ and modify web.sh in the same directory. If you do not want this project supports HTTPS, please modify the web.sh as well
 
- 
 Please make sure your system have installed azure-cli (install with Microsoft guide recommended), cdktf (v0.5.0 recommended), terraform, gcloud-cli, docker, jq and mysql client (v5.7 recommended).
 (ref : https://docs.microsoft.com/en-us/cli/azure/install-azure-cli )
 
